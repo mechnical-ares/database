@@ -20,7 +20,7 @@ class create : public operation{
 
 
 };
-
+operation resolve(string s);
 string select(select s);
 string create(create c);
 
