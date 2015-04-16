@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class operation{
+    
+    
+};
+
+class select : public operation{
+    
+    string select;
+    string from;
+    string where;
+};
+
+class create : public operation{
+    string tableName;
+    string PropertyName;
+
+
+};
+
+string select(select s);
+string create(create c);
+
+
+
+
+
+
+
+
+
+
