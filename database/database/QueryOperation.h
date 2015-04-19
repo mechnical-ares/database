@@ -4,11 +4,10 @@
 class QueryOperation :public Operation
 {
 public:
-	QueryOperation(vector<string> tables, vector<ColumnAndTable> columns, vector<Equation> equations);
-	virtual RecordSet exec();
-private:
-	vector<string> tables; //要查询的所有表名
-	vector<ColumnAndTable> columns; //查询的列名和所在表名
-	vector<Equation> equations;
+	virtual Table exec();
+	vector<TableColumn> columns;
+	vector<string> tableNames;
+	vector<Condition> conditions;
+
 };
 

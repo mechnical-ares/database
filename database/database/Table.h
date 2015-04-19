@@ -1,21 +1,31 @@
 #include <string>
 #include <vector>
-//#include "Operation.h"
-using namespace std;
+#include <memory>
 
-struct columnsAndType{
-	string column; //记录的表头
-	string type; //数据
+using namespace std;
+enum DataType{
+	CONST, 
+	INT, 
+	DOUBLE, 
+	BOOL, 
+	STRING,
+};
+struct ColumnTitle{
+	string column_name; 
+	DataType datatype;
 };
 
+struct Data{
+	DataType type;
+	string data;
+};
 
+typedef vector<string> row;
 class Table{
 public:
-	Table(string, vector<columnsAndType>, int, int, columnsAndType);
-private:
+	Table(string tableName, vector<ColumnTitle> title, ColumnTitle primaryKey);
 	string tableName;
-	vector<columnsAndType> columns;
-	int rowNum;
-	int colNum;
-	columnsAndType primaryKey;
+	vector<ColumnTitle> title;
+	ColumnTitle primaryKey;
+	vector<row> data;
 };

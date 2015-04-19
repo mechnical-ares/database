@@ -1,17 +1,35 @@
 #include <string>
 #include <vector>
 #include <map>
-using std::string;
-using std::vector;
-using std::pair;
-typedef pair<string, string> ColumnAndTable; //列和所在的表
-typedef pair<ColumnAndTable, ColumnAndTable> Equation;// 两个列的相等关系
-typedef vector<string> record;
-struct RecordSet{
-	vector<ColumnAndTable> titles; //记录的表头
-	vector<record> data; //数据
+#include "Table.h"
+using namespace std;
+struct TableColumn{
+	string tableName;
+	string colunmName;
 };
+
+//enum Operator{
+//	EQ, //==
+//	NE, //!=
+//	GT, //>
+//	LT, //<
+//	GE, //>=
+//	LE, //<=
+//};
+
+
+typedef bool(*Operator)(const Data&, const Data& );
+bool isEQ(const Data& left, const Data& right){
+	if (left.type != right.type)
+		return false;
+	return left.data == right.data;
+}
+struct Condition{
+	Operator op;
+	TableColumn left, right;
+};
+
 class Operation{
 public:
-	virtual RecordSet exec() = 0;
+	virtual Table exec() = 0;
 };

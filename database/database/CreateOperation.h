@@ -5,9 +5,7 @@ class CreateOperation :
 	public Operation
 {
 public:
-	CreateOperation(string, vector<columnsAndType>);
-private:
 	string tableName;
-	vector<columnsAndType> columns;
+	vector<ColumnTitle> columns;
 };
 
