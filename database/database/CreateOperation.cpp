@@ -4,6 +4,7 @@
 
 CreateOperation::CreateOperation(string tableName, vector<columnsAndType> columns) :tableName(tableName), columns(columns)
 {
+	//
 }
 
 
