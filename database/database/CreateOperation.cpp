@@ -1,10 +1,13 @@
-#include "stdafx.h"
-#include "CreateOperation.h"
-
-
-CreateOperation::CreateOperation(string tableName, vector<string> columns) :tableName(tableName), columns(columns)
+#pragma once
+#include "Operation.h"
+#include "Table.h"
+class CreateOperation :
+	public Operation
 {
-}
-
-
+public:
+	CreateOperation(string, vector<columnsAndType>);
+private:
+	string tableName;
+	vector<columnsAndType> columns;
+};
 
