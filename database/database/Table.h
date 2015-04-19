@@ -18,11 +18,13 @@ struct ColumnTitle{
 struct Data{
 	DataType type;
 	string data;
+	Data(const string& s);
 };
 
 typedef vector<string> row;
 class Table{
 public:
+	Table(){}
 	Table(string tableName);
 	string tableName;
 	vector<ColumnTitle> title;

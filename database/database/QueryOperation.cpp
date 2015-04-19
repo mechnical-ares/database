@@ -2,7 +2,7 @@
 #include "QueryOperation.h"
 using namespace std;
 namespace query{
-	typedef vector<record> Records;
+	typedef vector<row> Records;
 	vector<string> split(const string& s, const char delimiter){
 		size_t start = 0,end =0;
 		vector<string> ans;
@@ -15,26 +15,28 @@ namespace query{
 		return ans;
 	}
 
-	Records join(const Records& p, const Records& q){
-		Records result;
-		for (const auto& r1 : p){
-			for (const auto& r2 : q){
-				record tmp = r1;
+	Table join(const Table& p, const Table& q){
+		Table result;
+		for (const auto& r1 : p.data){
+			for (const auto& r2 : q.data){
+				row tmp = r1;
 				tmp.insert(tmp.end(),r2.begin(), r2.end());
-				result.push_back(tmp); 
+				result.data.push_back(tmp); 
 			}
 		}
+		result.title = p.title;
+		result.title.insert(result.title.end(), q.title.begin(), q.title.end());
 		return result;
 	}
 
-	int getPos(const vector<string>& tables, const Records& titles, ColumnAndTable columnAndTable){
+	int getPos(const vector<Table>& tables, const vector<string>& tableNames, const TableColumn& column){
 		int result = 0;
 		for (int i = 0; i < tables.size(); i++){
-			if (tables[i] != columnAndTable.second){
-				result += titles[i].size();
+			if (tableNames[i] != column.colunmName){
+				result += tables[i].title.size();
 			}else{
-				for (int j = 0; j < titles[i].size(); j++){
-					if (titles[i][j] == columnAndTable.first){
+				for (int j = 0; j < tables[i].title.size(); j++){
+					if (tables[i].title[j].column_name == column.colunmName){
 						break;
 					}
 					++result;
@@ -44,36 +46,49 @@ namespace query{
 		return result;
 	}
 
-	Records filter(const Records& records, const vector<string>& tables ,const Records& titles, const vector<Equation>& equations){
-		Records result;
-		for (auto& record : records){
+	Table filter(const Table& table, const vector<Table>& tables, const vector<string>& tableNames, const vector<Condition>& conditions){
+		Table result = table;
+		result.data.clear();
+		for (auto& record : table.data){
 			bool ok = true;
-			for (const auto& equation : equations){
-				ColumnAndTable left = equation.first;
-				ColumnAndTable right = equation.second;
-				int posl = getPos(tables, titles, left); 
-				int posr = getPos(tables, titles, right);
-				if (record[posl] != record[posr]){
+			for (const auto& condition : conditions){
+				int posl = getPos(tables, tableNames, condition.left);
+				int posr = getPos(tables, tableNames, condition.right);
+				Data datal(record[posl]);
+				Data datar(record[posr]);
+				if (!condition.op(datal, datar)){
 					ok = false;
 					break;
 				}
 			}
 			if (ok){
-				result.push_back(record);
+				result.data.push_back(record);
 			}
 		}
 		return result;
 	}
 
-	Records filter(const Records& records, const vector<string>& tables, const Records& titles, const vector<ColumnAndTable>& columns){
-		Records result;
-		for (const auto& rec: records){
-			record tmp;
-			for (const auto& column : columns){
-				int pos = getPos(tables, titles, column);
-				tmp.push_back(rec[pos]);
+	Table filter(const Table& table, const vector<Table>& tables, const vector<string>& tableNames, const vector<TableColumn>& columns){
+		Table result;
+		vector<int> columsID;
+		int sum = 0;
+		for (int i = 0; i < tableNames.size(); i++){
+			for (int j = 0; j < tables[i].title.size(); j++){
+				TableColumn current{ tableNames[i], tables[i].title[j].column_name };
+				if (find(columns.begin(), columns.end(), current) != columns.end()){
+					columsID.push_back(sum);
+					result.title.push_back(tables[i].title[j]);
+				}
+				++sum;
 			}
-			result.push_back(tmp);
+		}
+
+		for (const auto& rec: table.data){
+			row tmp;
+			for (int id : columsID){
+				tmp.push_back(rec[id]);
+			}
+			result.data.push_back(tmp);
 		}
 		return result;
 	}
@@ -87,27 +102,17 @@ QueryOperation::QueryOperation(vector<TableColumn> columns, vector<string> table
 
 Table QueryOperation::exec(){
 	
-	vector<Records> all_records;
-	Records titles;
-	for (auto&& table : tables){
-		ifstream file(table);
-		string line;
-		Records records;
-		getline(file, line);
-		titles.push_back(split(line, ','));
-		while (getline(file,line))
-		{
-			records.push_back(split(line, ','));
-		}
+	vector<Table> tables;
+	for (const auto& name : tableNames){
+		tables.push_back(Table(name));
 	}
-	Records result = all_records[0];
-	for (int i = 1; i < all_records.size(); i++){
-		result = join(result, all_records[i]);
+	Table result = tables[0];
+	for (int i = 1; i < tables.size(); i++){
+		result = join(result, tables[i]);
 	}
-	result = filter(result, tables, titles, equations);
-	result = filter(result, tables, titles, columns);
+	result = filter(result, tables, tableNames, conditions);
+	result = filter(result, tables, tableNames, columns);
 	
-	RecordSet resultSet{columns,result};
-	return resultSet;
-
+	result.tableName = "result";
+	return result;
 }
