@@ -1,12 +1,13 @@
 #pragma once
 #include "Operation.h"
+#include "Table.h"
 class CreateOperation :
 	public Operation
 {
 public:
-	CreateOperation(string ,vector<string>);
+	CreateOperation(string, vector<columnsAndType>);
 private:
 	string tableName;
-	vector<string> columns;
+	vector<columnsAndType> columns;
 };
 
