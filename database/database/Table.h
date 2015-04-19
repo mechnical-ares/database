@@ -18,7 +18,7 @@ struct ColumnTitle{
 struct Data{
 	DataType type;
 	string data;
-	Data(const string& s);
+	Data(DataType type, string data) :type(type), data(data){}
 };
 
 typedef vector<string> row;

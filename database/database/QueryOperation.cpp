@@ -54,8 +54,9 @@ namespace query{
 			for (const auto& condition : conditions){
 				int posl = getPos(tables, tableNames, condition.left);
 				int posr = getPos(tables, tableNames, condition.right);
-				Data datal(record[posl]);
-				Data datar(record[posr]);
+
+				Data datal(table.title[posl].datatype, record[posl]);
+				Data datar(table.title[posr].datatype, record[posr]);
 				if (!condition.op(datal, datar)){
 					ok = false;
 					break;
