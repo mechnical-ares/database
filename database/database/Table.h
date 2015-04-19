@@ -4,8 +4,8 @@
 using namespace std;
 
 struct columnsAndType{
-	string column; //记录的表头
-	string type; //数据
+	string column; //表头
+	string type; //数据类型
 };
 
 
