@@ -4,18 +4,18 @@
 using namespace std;
 
 struct columnsAndType{
-	string column; //表头
-	string type; //数据类型
+	string column; //记录的表头
+	string type; //数据
 };
 
 
 class Table{
 public:
-	Table(string, vector<columnsAndType>, int, int);
+	Table(string, vector<columnsAndType>, int, int, columnsAndType);
 private:
 	string tableName;
 	vector<columnsAndType> columns;
 	int rowNum;
 	int colNum;
-	
+	columnsAndType primaryKey;
 };
