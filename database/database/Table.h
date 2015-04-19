@@ -23,7 +23,7 @@ struct Data{
 typedef vector<string> row;
 class Table{
 public:
-	Table(string tableName, vector<ColumnTitle> title, ColumnTitle primaryKey);
+	Table(string tableName);
 	string tableName;
 	vector<ColumnTitle> title;
 	ColumnTitle primaryKey;

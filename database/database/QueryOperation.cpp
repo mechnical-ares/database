@@ -80,11 +80,12 @@ namespace query{
 
 }
 using namespace query;
-QueryOperation::QueryOperation(vector<string> tables, vector<ColumnAndTable> columns, vector<Equation> equations)
-	:tables(tables), columns(columns), equations(equations){
+QueryOperation::QueryOperation(vector<TableColumn> columns, vector<string> tableNames, vector<Condition> conditions)
+	:columns(columns), tableNames(tableNames), conditions(conditions)
+{
 }
 
-RecordSet QueryOperation::exec(){
+Table QueryOperation::exec(){
 	
 	vector<Records> all_records;
 	Records titles;

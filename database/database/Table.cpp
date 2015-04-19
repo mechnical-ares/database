@@ -3,6 +3,6 @@
 
 
 
-Table::Table(string tableName, vector<ColumnTitle> title, ColumnTitle primaryKey) :tableName(tableName), title(title), primaryKey(primaryKey)
-{
+Table::Table(string tableName) :tableName(tableName){
+	
 }
