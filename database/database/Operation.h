@@ -1,6 +1,7 @@
 #pragma once
-#include "stdafx.h"
 #include "Table.h"
+#include <string>
+#include <vector>
 using namespace std;
 struct TableColumn{
 	string tableName;

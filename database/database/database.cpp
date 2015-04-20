@@ -1,15 +1,15 @@
-
 #include "stdafx.h"
 #include<string>
 #include<iostream>
 #include<vector>
 #include<sstream>
 #include<vector>
+#include <iomanip>
 #include"CreateOperation.h"
 #include"QueryOperation.h"
 #include"Operation.h"
 #include"Table.h"
-#include <iomanip>
+
 using namespace std;
 
 //字符串分割函数
@@ -148,6 +148,7 @@ Condition Transcond(string t){
 							temp.op = isLE;//<=
 						}
 	}
+	return temp;
 }
 bool issubQuery(string str)
 {
@@ -171,7 +172,7 @@ Operation *parser(string t)
 		t = t.substr(1, t.length() - 2);
 	}
 	string type = t.substr(0, 6);//操作类型
-	Operation *op;
+	Operation *op = NULL;
 	int count = 0;
 
 	if (type == "SELECT" || type == "select")//判断类型
@@ -248,7 +249,7 @@ Operation *parser(string t)
 			op = new CreateOperation(tableName, CTs, primaryKey);
 		}
 	}
-return op;
+	return op;
 }
 
 int main()
