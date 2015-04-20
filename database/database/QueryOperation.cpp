@@ -1,7 +1,4 @@
 #include "stdafx.h"
-#include "QueryOperation.h"
-#include "Table.h"
-
 using namespace std;
 namespace query{
 	typedef vector<row> Records;
@@ -23,18 +20,20 @@ namespace query{
 
 	int getPos(const vector<Table>& tables, const vector<string>& tableNames, const TableColumn& column){
 		int result = 0;
+		
 		for (size_t i = 0; i < tables.size(); i++){
-			if (tableNames[i] != column.colunmName){
+			if (tableNames[i] != column.tableName){
 				result += tables[i].title.size();
 			}else{
 				for (size_t j = 0; j < tables[i].title.size(); j++){
 					if (tables[i].title[j].column_name == column.colunmName){
-						break;
+						goto out;
 					}
 					++result;
 				}
 			}
 		}
+		out:
 		return result;
 	}
 

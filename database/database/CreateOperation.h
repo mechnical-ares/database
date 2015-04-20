@@ -1,4 +1,11 @@
 #pragma once
+
+#ifndef CREATEOPERATION
+#define CREATEOPERATION
+
+#include <iostream>
+#include <fstream>
+#include "Operation.h"
 #include "Table.h"
 /*
 enum DataType{
@@ -17,3 +24,4 @@ public:
 	virtual Table exec();
 };
 
+#endif

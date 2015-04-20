@@ -1,16 +1,4 @@
-#pragma once
 #include "stdafx.h"
-#include<string>
-#include<iostream>
-#include<vector>
-#include<sstream>
-#include<vector>
-#include <iomanip>
-#include"Table.h"
-
-#include"CreateOperation.h"
-#include"QueryOperation.h"
-
 using namespace std;
 
 //×Ö·û´®·Ö¸îº¯Êý
@@ -215,7 +203,7 @@ Operation *parser(string t)
 		for (int i = 0; i < equations.size(); i++)
 		{
 			conds.push_back(Transcond(equations.at(i)));
-		}
+		} 
 		op = new QueryOperation(TC, table, conds);
 	}
 	else{
@@ -240,7 +228,7 @@ Operation *parser(string t)
 			}
 
 			string keyCmp = split(columnAndType.at(columnAndType.size() - 1), "(", ")").at(0);
-			if ("primary key" != keyCmp || keyCmp != "PRIMARY KEY"){
+			if ("primary key" != keyCmp && keyCmp != "PRIMARY KEY"){
 				cerr << "Illegal input,need primary key";
 				abort();
 			}
@@ -260,34 +248,23 @@ int main()
 	string input;
 	while (true){
 		cout << "MIniBase>";
-		cin >> input;
+		getline(cin, input);
 		try{
 			Operation* operation = parser(input);
 			const Table& result = operation->exec();
-			cout << "success! " << result.data.size() << "rows affected\n";
-			cout << "     " << result.tableName << endl;
+			cout << "success! " << result.data.size() << " rows affected\n";
+			cout << "--------" << result.tableName <<"------------"<< endl;
 
 			for (const auto& title : result.title){
-				cout << setw(8) << title.column_name;
-				if (title == result.title.back()){
-					cout << endl;
-				}
-				else{
-					cout << "|";
-				}
-
+				cout << setw(8) << title.column_name<< "|";
 			}
+			cout << endl;
 
 			for (const auto& row : result.data){
 				for (const auto& data : row){
-					cout << setw(8) << data;
-					if (data == row.back()){
-						cout << endl;
-					}
-					else{
-						cout << "|";
-					}
+					cout << setw(8) << data << "|";
 				}
+				cout << endl;
 
 			}
 

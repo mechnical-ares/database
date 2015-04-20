@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "Table.h"
-#include <iostream>
 
 char Char2Inner(char c1, char c2, int &i){
 	if (c1 == '\\'){
@@ -71,13 +69,13 @@ Table::Table(string tableName) :tableName(cleanStr(tableName)){
 		}
 
 		vector<DataType> types;
-		char c;
 		int tmp;
+		types.clear();
 		fin.getline(s, 1000); //DataType
-		for (int i = 0, len = 0; i < this->title.size(); i++){
-			fin >> tmp >> c;
+		for (int i = 0,j=0, len = 0; i < this->title.size(); i++,j+=2){
+			tmp = s[j] - '0';
 			types.push_back((DataType)tmp);
-			this->title[i].column_name = types[i];
+			this->title[i].datatype = types[i];
 		}
 
 		this->data.clear();

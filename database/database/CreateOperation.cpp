@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "CreateOperation.h"
 
 /*
 string tableName;
@@ -34,25 +33,7 @@ string Inner2Text(string &s){
 	return Inner2Text(s.c_str());
 }
 
-string cleanStr(string s){
-	string ret = "";
-	for (size_t i = 0; i < s.length(); i++){
-		switch (s[i]){
-		case '\n': break;
-		case '\t': break;
-		case '\\': break;
-		case '\0': break;
-		case ':': break;
-		case '*': break;
-		case '?': break;
-		case '<': break;
-		case '>': break;
-		case '|': break;
-		default: ret.push_back(s[i]);
-		}
-	}
-	return ret;
-}
+
 
 Table CreateOperation::exec(){
 	tableName = cleanStr(tableName);
@@ -70,16 +51,18 @@ Table CreateOperation::exec(){
 		ofstream fout(path.c_str(), fstream::out);
 		fout <<Inner2Text(tableName) << endl;
 		for (size_t i = 0; i<columns.size(); i++)
-			fout << Inner2Text(columns[i].column_name) << (i + 1 == (int)columns.size())?"\n":",";
+			fout << Inner2Text(columns[i].column_name) << ((i + 1 == (int)columns.size())?"\n":",");
 		for (size_t i = 0; i<columns.size(); i++)
-			fout << columns[i].datatype << (i + 1 == (int)columns.size())?"\n":",";
+			fout << columns[i].datatype << ((i + 1 == (int)columns.size()) ? "\n" : ",");
+		fout.close();
 	}
 	catch (exception e)
 	{
 		string info = "Create table failed!\n";
 		throw info;
 	}
-	return NULL;
+
+	return Table(cleanStr(tableName));
 }
 
 

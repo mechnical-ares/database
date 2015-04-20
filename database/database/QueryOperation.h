@@ -1,5 +1,11 @@
 #pragma once
 
+#ifndef QUERYOPERATION
+#define QUERYOPERATION
+
+#include "Operation.h"
+
+
 class QueryOperation :public Operation
 {
 public:
@@ -10,3 +16,4 @@ public:
 	vector<Condition> conditions;
 };
 
+#endif

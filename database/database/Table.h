@@ -36,3 +36,4 @@ public:
 	ColumnTitle primaryKey;
 	vector<row> data;
 };
+string cleanStr(string s);
