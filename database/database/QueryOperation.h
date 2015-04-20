@@ -1,7 +1,6 @@
 #pragma once
 
-#ifndef QUERYOPERATION
-#define QUERYOPERATION
+
 
 #include "Operation.h"
 
@@ -16,4 +15,9 @@ public:
 	vector<Condition> conditions;
 };
 
-#endif
+
+
+Table join(const Table& p, const Table& q);
+int getPos(const vector<Table>& tables, const vector<string>& tableNames, const TableColumn& column);
+Table filter(const Table& table, const vector<Table>& tables, const vector<string>& tableNames, const vector<Condition>& conditions);
+Table filter(const Table& table, const vector<Table>& tables, const vector<string>& tableNames, const vector<TableColumn>& columns);
