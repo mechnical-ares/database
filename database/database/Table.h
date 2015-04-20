@@ -20,11 +20,13 @@ struct ColumnTitle{
 struct Data{
 	DataType type;
 	string data;
+	Data(DataType type, string data) :type(type), data(data){}
 };
 
 typedef vector<string> row;
 class Table{
 public:
+	Table(){}
 	Table(string tableName);
 	string tableName;
 	vector<ColumnTitle> title;
