@@ -248,7 +248,7 @@ int main()
 	string input;
 	while (true){
 		cout << "MIniBase>";
-		cin >> input;
+		getline(cin, input);
 		try{
 			Operation* operation = parser(input);
 			const Table& result = operation->exec();
