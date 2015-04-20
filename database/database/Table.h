@@ -1,10 +1,9 @@
-#include <string>
-#include <vector>
-#include <memory>
+#include "Operation.h"
+
 
 using namespace std;
 enum DataType{
-	CONST, 
+	CONEST,
 	INT, 
 	DOUBLE, 
 	BOOL, 
@@ -13,6 +12,9 @@ enum DataType{
 struct ColumnTitle{
 	string column_name; 
 	DataType datatype;
+	ColumnTitle(string cn="", DataType d=STRING){
+		column_name = cn, datatype = d;
+	}
 };
 
 struct Data{

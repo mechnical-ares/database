@@ -1,7 +1,5 @@
-#include <string>
-#include <vector>
-#include <map>
-#include "Table.h"
+#include "stdafx.h"
+
 using namespace std;
 struct TableColumn{
 	string tableName;
