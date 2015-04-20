@@ -123,7 +123,7 @@ Condition Transcond(string t){
 			{
 				temp.left = TransTandC(cond.at(0));
 				temp.right = TransTandC(cond.at(1));
-				temp.op = LT;//<
+				temp.op = isLT;//<
 			}
 			else
 				if ((cond = split(t, "!=")).size() == 2)
