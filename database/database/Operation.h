@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef OPERATION
+#define OPERATION
+
 #include "Table.h"
 #include <string>
 #include <vector>
@@ -38,3 +42,6 @@ class Operation{
 public:
 	virtual Table exec() = 0;
 };
+
+
+#endif
