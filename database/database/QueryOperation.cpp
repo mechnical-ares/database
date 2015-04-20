@@ -93,7 +93,7 @@ QueryOperation::QueryOperation(vector<TableColumn> columns, vector<string> table
 }
 
 Table QueryOperation::exec(){
-	
+
 	vector<Table> tables;
 	for (const auto& name : tableNames){
 		tables.push_back(Table(name));
