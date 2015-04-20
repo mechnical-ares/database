@@ -1,18 +1,18 @@
+#pragma once
 #include "Operation.h"
-
 
 using namespace std;
 enum DataType{
-	CONEST,
-	INT, 
-	DOUBLE, 
-	BOOL, 
-	STRING,
+	ACONST,
+	AINT, 
+	ADOUBLE, 
+	ABOOL, 
+	ASTRING,
 };
 struct ColumnTitle{
 	string column_name; 
 	DataType datatype;
-	ColumnTitle(string cn="", DataType d=STRING){
+	ColumnTitle(string cn="", DataType d=ASTRING){
 		column_name = cn, datatype = d;
 	}
 };

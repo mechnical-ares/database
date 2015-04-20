@@ -6,7 +6,7 @@
 #pragma once
 
 #include "targetver.h"
-
+#include "Table.h"
 #include <windows.h>
 #include <stdio.h>
 #include <tchar.h>
