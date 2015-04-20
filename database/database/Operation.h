@@ -23,36 +23,12 @@ struct TableColumn{
 
 typedef bool (*Operator)(const Data&, const Data& );
 
-bool isEQ(const Data& left, const Data& right){
-	if (left.type != right.type)
-		return false;
-	return left.data == right.data;
-}
-bool isNE(const Data& left, const Data& right){
-	if (left.type != right.type)
-		return false;
-	return left.data != right.data;
-}
-bool isGT(const Data& left, const Data& right){
-	if (left.type != right.type)
-		return false;
-	return left.data > right.data;
-}
-bool isLT(const Data& left, const Data& right){
-	if (left.type != right.type)
-		return false;
-	return left.data < right.data;
-}
-bool isGE(const Data& left, const Data& right){
-	if (left.type != right.type)
-		return false;
-	return left.data >= right.data;
-}
-bool isLE(const Data& left, const Data& right){
-	if (left.type != right.type)
-		return false;
-	return left.data <= right.data;
-}
+bool isEQ(const Data& left, const Data& right);
+bool isNE(const Data& left, const Data& right);
+bool isGT(const Data& left, const Data& right);
+bool isLT(const Data& left, const Data& right);
+bool isGE(const Data& left, const Data& right);
+bool isLE(const Data& left, const Data& right);
 struct Condition{
 	Operator op;
 	TableColumn left, right;

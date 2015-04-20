@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "Table.h"
-#include <iostream>
 
 char Char2Inner(char c1, char c2, int &i){
 	if (c1 == '\\'){

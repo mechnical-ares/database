@@ -12,7 +12,12 @@
 #include <string>
 #include <vector>
 #include <memory>
-
-
-// TODO: reference additional headers your program requires here
+#include <iomanip>
 #include <fstream>
+// TODO: reference additional headers your program requires here
+
+
+#include "Table.h"
+#include "Operation.h"
+#include "CreateOperation.h"
+#include "QueryOperation.h"

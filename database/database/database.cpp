@@ -1,15 +1,4 @@
 #include "stdafx.h"
-#include<string>
-#include<iostream>
-#include<vector>
-#include<sstream>
-#include<vector>
-#include <iomanip>
-#include"CreateOperation.h"
-#include"QueryOperation.h"
-#include"Operation.h"
-#include"Table.h"
-
 using namespace std;
 
 //×Ö·û´®·Ö¸îº¯Êý

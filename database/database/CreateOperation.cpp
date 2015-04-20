@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "CreateOperation.h"
+
 /*
 string tableName;
 vector<ColumnTitle> columns;
@@ -33,25 +33,7 @@ string Inner2Text(string &s){
 	return Inner2Text(s.c_str());
 }
 
-string cleanStr(string s){
-	string ret = "";
-	for (size_t i = 0; i < s.length(); i++){
-		switch (s[i]){
-		case '\n': break;
-		case '\t': break;
-		case '\\': break;
-		case '\0': break;
-		case ':': break;
-		case '*': break;
-		case '?': break;
-		case '<': break;
-		case '>': break;
-		case '|': break;
-		default: ret.push_back(s[i]);
-		}
-	}
-	return ret;
-}
+
 
 Table CreateOperation::exec(){
 	tableName = cleanStr(tableName);

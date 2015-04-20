@@ -89,6 +89,7 @@
   <ItemGroup>
     <ClCompile Include="CreateOperation.cpp" />
     <ClCompile Include="database.cpp" />
+    <ClCompile Include="Operation.cpp" />
     <ClCompile Include="QueryOperation.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
