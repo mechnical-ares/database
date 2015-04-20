@@ -31,11 +31,11 @@ namespace query{
 
 	int getPos(const vector<Table>& tables, const vector<string>& tableNames, const TableColumn& column){
 		int result = 0;
-		for (int i = 0; i < tables.size(); i++){
+		for (size_t i = 0; i < tables.size(); i++){
 			if (tableNames[i] != column.colunmName){
 				result += tables[i].title.size();
 			}else{
-				for (int j = 0; j < tables[i].title.size(); j++){
+				for (size_t j = 0; j < tables[i].title.size(); j++){
 					if (tables[i].title[j].column_name == column.colunmName){
 						break;
 					}
@@ -73,8 +73,8 @@ namespace query{
 		Table result;
 		vector<int> columsID;
 		int sum = 0;
-		for (int i = 0; i < tableNames.size(); i++){
-			for (int j = 0; j < tables[i].title.size(); j++){
+		for (size_t i = 0; i < tableNames.size(); i++){
+			for (size_t j = 0; j < tables[i].title.size(); j++){
 				TableColumn current{ tableNames[i], tables[i].title[j].column_name };
 				if (find(columns.begin(), columns.end(), current) != columns.end()){
 					columsID.push_back(sum);
@@ -108,7 +108,7 @@ Table QueryOperation::exec(){
 		tables.push_back(Table(name));
 	}
 	Table result = tables[0];
-	for (int i = 1; i < tables.size(); i++){
+	for (size_t i = 1; i < tables.size(); i++){
 		result = join(result, tables[i]);
 	}
 	result = filter(result, tables, tableNames, conditions);
