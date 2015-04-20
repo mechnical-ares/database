@@ -9,6 +9,7 @@
 #include"QueryOperation.h"
 #include"Operation.h"
 #include"Table.h"
+#include <iomanip>
 using namespace std;
 
 //×Ö·û´®·Ö¸îº¯Êý
@@ -252,7 +253,53 @@ return op;
 
 int main()
 {
-	parser("select ab,c,d from e,f where ab>1");
+	/*parser("select ab,c,d from e,f where ab>1");*/
+	cout << "MIniBase Beta 0.1\n";
+	string input;
+	while (true){
+		cout << "MIniBase>";
+		cin >> input;
+		try{
+			Operation* operation = parser(input);
+			const Table& result = operation->exec();
+			cout << "success! " << result.data.size() << "rows affected\n";
+			cout << "     " << result.tableName << endl;
+
+			for (const auto& title : result.title){
+				cout << setw(8) << title.column_name;
+				if (title == result.title.back()){
+					cout << endl;
+				}
+				else{
+					cout << "|";
+				}
+
+			}
+
+			for (const auto& row : result.data){
+				for (const auto& data : row){
+					cout << setw(8) << data;
+					if (data == row.back()){
+						cout << endl;
+					}
+					else{
+						cout << "|";
+					}
+				}
+
+			}
+
+			delete operation;
+		}
+		catch (string e){
+			cout << e << endl;
+		}
+		catch (exception e){
+			cout << e.what << endl;
+		}
+
+	}
 	return 0;
 }
+
 
