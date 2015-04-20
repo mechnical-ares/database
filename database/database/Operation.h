@@ -1,5 +1,6 @@
+#pragma once
 #include "stdafx.h"
-
+#include "Table.h"
 using namespace std;
 struct TableColumn{
 	string tableName;
@@ -16,7 +17,8 @@ struct TableColumn{
 //};
 
 
-typedef bool(*Operator)(const Data&, const Data& );
+typedef bool (*Operator)(const Data&, const Data& );
+
 bool isEQ(const Data& left, const Data& right){
 	if (left.type != right.type)
 		return false;
