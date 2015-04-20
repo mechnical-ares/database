@@ -1,18 +1,17 @@
 #pragma once
-#include "Operation.h"
 
 using namespace std;
 enum DataType{
-	ACONST,
-	AINT, 
-	ADOUBLE, 
-	ABOOL, 
-	ASTRING,
+	DB_CONST,
+	DB_INT, 
+	DB_DOUBLE, 
+	DB_BOOL, 
+	DB_STRING,
 };
 struct ColumnTitle{
 	string column_name; 
 	DataType datatype;
-	ColumnTitle(string cn="", DataType d=ASTRING){
+	ColumnTitle(string cn="", DataType d=DB_STRING){
 		column_name = cn, datatype = d;
 	}
 };
