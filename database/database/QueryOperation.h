@@ -1,5 +1,6 @@
 #pragma once
 #include "Operation.h"
+#include "Table.h"
 
 class QueryOperation :public Operation
 {

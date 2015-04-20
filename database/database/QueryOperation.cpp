@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Table.h"
 #include "QueryOperation.h"
 using namespace std;
 namespace query{
