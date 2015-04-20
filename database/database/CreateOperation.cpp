@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CreateOperation.h"
+
 /*
 string tableName;
 vector<ColumnTitle> columns;

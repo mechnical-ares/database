@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "Table.h"
 #include "QueryOperation.h"
+#include "Table.h"
+
 using namespace std;
 namespace query{
 	typedef vector<row> Records;

@@ -1,3 +1,4 @@
+#pragma once
 #include "stdafx.h"
 #include<string>
 #include<iostream>
@@ -5,10 +6,10 @@
 #include<sstream>
 #include<vector>
 #include <iomanip>
+#include"Table.h"
+
 #include"CreateOperation.h"
 #include"QueryOperation.h"
-#include"Operation.h"
-#include"Table.h"
 
 using namespace std;
 

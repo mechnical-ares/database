@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include "Operation.h"
 #include "Table.h"
 /*
 enum DataType{
