@@ -3,17 +3,7 @@
 using namespace std;
 namespace query{
 	typedef vector<row> Records;
-	vector<string> split(const string& s, const char delimiter){
-		size_t start = 0,end =0;
-		vector<string> ans;
-		string token;
-		while ((end = s.find(start,delimiter) != s.npos)){
-				token = s.substr(start,end);
-				ans.push_back(token);
-				start = end + 1;
-		}
-		return ans;
-	}
+
 
 	Table join(const Table& p, const Table& q){
 		Table result;
