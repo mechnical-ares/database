@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef QUERYOPERATION
+#define QUERYOPERATION
+
 #include "Operation.h"
 #include "Table.h"
 
@@ -12,3 +16,4 @@ public:
 	vector<Condition> conditions;
 };
 
+#endif

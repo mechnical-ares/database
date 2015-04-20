@@ -5,6 +5,9 @@
 
 #pragma once
 
+#ifndef STDAFX
+#define STDAFX
+
 #include "targetver.h"
 #include <windows.h>
 #include <stdio.h>
@@ -16,3 +19,5 @@
 
 // TODO: reference additional headers your program requires here
 #include <fstream>
+
+#endif

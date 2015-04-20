@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef CREATEOPERATION
+#define CREATEOPERATION
+
 #include <iostream>
 #include <fstream>
 #include "Operation.h"
@@ -20,3 +24,4 @@ public:
 	virtual Table exec();
 };
 
+#endif

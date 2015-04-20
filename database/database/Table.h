@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef TABLE
+#define TABLE
+
 #include <string>
 #include <vector>
 using namespace std;
@@ -36,3 +40,5 @@ public:
 	ColumnTitle primaryKey;
 	vector<row> data;
 };
+
+#endif
