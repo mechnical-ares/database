@@ -244,7 +244,7 @@ Operation *parser(string t)
 			string primaryKey = split(columnAndType.at(columnAndType.size() - 1), "(", ")").at(1);
 
 			//cout << "primary key:" << primaryKey;
-			op = new CreateOperation(tableName, CTs, primaryKey);
+			op = new CreateOperation(tableName, CTs);
 		}
 	}
 return op;
