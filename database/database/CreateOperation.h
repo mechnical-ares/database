@@ -16,7 +16,7 @@ class CreateOperation : public Operation//..
 public:
 	string tableName;
 	vector<ColumnTitle> columns;
-	CreateOperation(string tableName, vector<ColumnTitle> columns);
+	CreateOperation(string tableName, vector<ColumnTitle> columns, ColumnTitle primaryKey);
 	virtual Table exec();
 };
 

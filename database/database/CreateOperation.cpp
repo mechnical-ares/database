@@ -10,14 +10,14 @@ struct ColumnTitle{
 string column_name;
 DataType datatype;
 };*/
-CreateOperation::CreateOperation(string tableName, vector<ColumnTitle> columns) :tableName(tableName), columns(columns)
+CreateOperation::CreateOperation(string tableName, vector<ColumnTitle> columns, ColumnTitle primaryKey = {}) :tableName(tableName), columns(columns)
 {
 	//
 }
 
 string Inner2Text(const char s[]){
 	string ret = "";
-	for (int i = 0; i < strlen(s); i++){
+	for (size_t i = 0; i < strlen(s); i++){
 		switch (s[i]){
 		case '\n': ret.push_back('\\'); ret.push_back('n'); break;
 		case '\t': ret.push_back('\\'); ret.push_back('t'); break;
@@ -35,7 +35,7 @@ string Inner2Text(string &s){
 
 string cleanStr(string s){
 	string ret = "";
-	for (int i = 0; i < s.length(); i++){
+	for (size_t i = 0; i < s.length(); i++){
 		switch (s[i]){
 		case '\n': break;
 		case '\t': break;
@@ -58,25 +58,27 @@ Table CreateOperation::exec(){
 	string path = string(".\\Data\\") + tableName;
 	ifstream test(path.c_str());
 	if (test){
-		cerr << "The table is already in your computer!\n";
-		return;
+		string info = "The table is already in your computer!\n";
+		cerr << info;
+		throw info;
 	}
 	test.close();
 	try
 	{
 		TCHAR szDirName[] = L".\\Data";
-		bool flag = CreateDirectory(szDirName, NULL);		
+		CreateDirectory(szDirName, NULL);		
 		ofstream fout(path.c_str(), fstream::out);
 		fout <<Inner2Text(tableName) << endl;
-		for (int i = 0; i<columns.size(); i++)
+		for (size_t i = 0; i<columns.size(); i++)
 			fout << Inner2Text(columns[i].column_name) << (i + 1 == (int)columns.size())?"\n":",";
-		for (int i = 0; i<columns.size(); i++)
+		for (size_t i = 0; i<columns.size(); i++)
 			fout << columns[i].datatype << (i + 1 == (int)columns.size())?"\n":",";
 	}
 	catch (exception e)
 	{
 		cerr << "Create table failed!\n";
 	}
+	return NULL;
 }
 
 
