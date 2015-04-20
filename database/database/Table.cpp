@@ -55,8 +55,8 @@ Table::Table(string tableName) :tableName(cleanStr(tableName)){
 	string path = string(".\\Data\\") + cleanStr(tableName);
 	ifstream fin(path.c_str());
 	if (!fin){
-		std::cerr << "No table found!\n";
-		return;
+		string info = "No table found!\n";
+		throw info;
 	}
 	else{
 		char s[1000];

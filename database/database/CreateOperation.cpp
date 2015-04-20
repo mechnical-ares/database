@@ -59,7 +59,6 @@ Table CreateOperation::exec(){
 	ifstream test(path.c_str());
 	if (test){
 		string info = "The table is already in your computer!\n";
-		cerr << info;
 		throw info;
 	}
 	test.close();
@@ -76,7 +75,8 @@ Table CreateOperation::exec(){
 	}
 	catch (exception e)
 	{
-		cerr << "Create table failed!\n";
+		string info = "Create table failed!\n";
+		throw info;
 	}
 	return NULL;
 }
