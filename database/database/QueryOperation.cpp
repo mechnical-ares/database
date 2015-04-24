@@ -45,9 +45,21 @@ Table filter(const Table& table, const vector<Table>& tables, const vector<strin
 		for (const auto& condition : conditions){
 			int posl = getPos(tables, tableNames, condition.left);
 			int posr = getPos(tables, tableNames, condition.right);
-
-			Data datal(table.title[posl].datatype, record[posl]);
-			Data datar(table.title[posr].datatype, record[posr]);
+			Data datal; 
+			Data datar; 
+			if (condition.isLeftConst){
+				datal = condition.leftData;
+			}
+			else{
+				datal = Data(table.title[posl].datatype, record[posl]);
+			}
+			if (condition.isRightConst){
+				datar = condition.rightData;
+			}
+			else{
+				datar = Data(table.title[posr].datatype, record[posr]);
+			}
+			
 			if (!condition.op(datal, datar)){
 				ok = false;
 				break;
@@ -95,7 +107,7 @@ Table QueryOperation::exec(){
 
 	vector<Table> tables;
 	for (const auto& name : tableNames){
-		tables.push_back(Table(name));
+		tables.push_back(Table(name,conditions));
 	}
 	Table result = tables[0];
 	for (size_t i = 1; i < tables.size(); i++){

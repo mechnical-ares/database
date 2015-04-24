@@ -23,6 +23,7 @@ struct ColumnTitle{
 struct Data{
 	DataType type;
 	string data;
+	Data(){}
 	Data(DataType type, string data) :type(type), data(data){}
 };
 

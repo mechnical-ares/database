@@ -36,6 +36,8 @@ bool isLE(const Data& left, const Data& right);
 struct Condition{
 	Operator op;
 	TableColumn left, right;
+	bool isLeftConst, isRightConst;
+	Data leftData, rightData;
 };
 
 class Operation{
