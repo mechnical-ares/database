@@ -46,7 +46,7 @@ int Disk::writeBlock(const int id, char * data){
 		}
 	}
 	int real_id = blockID[id];
-	fseek(db_file, BLOCK_SIZE * real_id, SEEK_S ET);
+	fseek(db_file, BLOCK_SIZE * real_id, SEEK_SET);
 	fwrite(data, sizeof(char), BLOCK_SIZE , db_file);
 	return 0;
 
