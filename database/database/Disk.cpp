@@ -9,9 +9,8 @@ Disk::Disk(const string& name) :name(name),db_file(NULL),meta_file(NULL){
 	char tmp[BUFFER_SIZE];
 	string current_name;
 	globalMaxId = -1;
-	while (!feof(meta_file)){
+	while (fgets(tmp, BUFFER_SIZE, meta_file) != NULL){
 		++globalMaxId;
-		fgets(tmp, BUFFER_SIZE, meta_file);
 		stringstream stream(tmp);
 		stream >> current_name;
 		if (current_name == name){
@@ -25,7 +24,7 @@ int Disk::readBlock(const int id, char * data){
 		return DB_FILE_ERROR;
 	if (meta_file == NULL)
 		return META_FILE_ERROR;
-	while (id > blockID.size()){
+	while (id >= blockID.size()){
 		if (allocateBlock()){
 			return ALLOC_ERROR;
 		}
@@ -41,17 +40,16 @@ int Disk::writeBlock(const int id, char * data){
 		return DB_FILE_ERROR;
 	if (meta_file == NULL)
 		return META_FILE_ERROR;
-	while (id > blockID.size()){
+	while (id >= blockID.size()){
 		if (allocateBlock()){
 			return ALLOC_ERROR;
 		}
 	}
-	if (id < blockID.size()){
-		int real_id = blockID[id];
-		fseek(db_file, BLOCK_SIZE * real_id, SEEK_SET);
-		fwrite(data, sizeof(char), BLOCK_SIZE , db_file);
-		return 0;
-	}
+	int real_id = blockID[id];
+	fseek(db_file, BLOCK_SIZE * real_id, SEEK_S ET);
+	fwrite(data, sizeof(char), BLOCK_SIZE , db_file);
+	return 0;
+
 }
 int Disk::allocateBlock(){
 	if (fseek(db_file, 0, SEEK_END))
