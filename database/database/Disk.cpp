@@ -2,9 +2,9 @@
 const int Disk::BLOCK_SIZE = 512;
 
 Disk::Disk(const string& name) :name(name),db_file(NULL),meta_file(NULL){
-	meta_file = fopen("meta", "r+");
+	meta_file = fopen("meta", "r+b");
 	if (meta_file == NULL){
-		meta_file = fopen("meta", "w+");
+		meta_file = fopen("meta", "w+b");
 	}
 	if (meta_file == NULL)
 		return;
@@ -20,9 +20,9 @@ Disk::Disk(const string& name) :name(name),db_file(NULL),meta_file(NULL){
 			blockID.push_back(globalMaxId);
 		}
 	}
-	db_file = fopen("db", "r+");
+	db_file = fopen("db", "r+b");
 	if (db_file == NULL)
-		db_file = fopen("db", "w+");
+		db_file = fopen("db", "w+b");
 }
 int Disk::readBlock(const int id, char * data){
 	if (db_file == NULL)
