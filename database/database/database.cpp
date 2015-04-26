@@ -226,9 +226,7 @@ Operation *parser(string t)
 		} 
 		op = new QueryOperation(TC, table, conds);
 	}
-	else{
-		//分词时注意类型表名后面必须接 空格；主键不能接空格，必须直接接括号
-		if (type == "CREATE" || type == "create")//creat table by TZH
+	else if (type == "CREATE" || type == "create")//creat table by TZH//分词时注意类型表名后面必须接 空格；主键不能接空格，必须直接接括号
 		{
 			string tableName = "";//
 			vector<string> allwords = split(t, " (", ") ");
@@ -257,6 +255,13 @@ Operation *parser(string t)
 			//cout << "primary key:" << primaryKey;
 			op = new CreateOperation(tableName, CTs, primaryKey);
 		}
+	else if (type == "INSERT" || type == "insert")
+	{
+
+	}
+	else if (type == "DELETE" || type == "delete")
+	{
+
 	}
 	return op;
 }
