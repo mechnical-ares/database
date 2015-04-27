@@ -90,9 +90,20 @@ Table::Table(string tableName) :tableName(cleanStr(tableName)){
 		}
 	}
 }
+
+KeyFunc buildKeyfunc(DataType type){
+	auto fn =  [&](string l, string r)->int {
+		Data ld{ type, l };
+		Data rd{ type, r };
+		return isLT(ld, rd);
+	};
+	return fn;
+}
+
 Table::Table(string tableName, const vector<Condition>& conditions){
 	BPlusTree tree(tableName,this);
 	Condition leftCond, rightCond;
+	leftCond.op = rightCond.op = NULL;
 	for (const Condition& condition : conditions){
 		const auto& left = condition.left;
 		const auto& right = condition.right;
@@ -104,7 +115,24 @@ Table::Table(string tableName, const vector<Condition>& conditions){
 				rightCond = condition;
 			}
 		}
+	}
 
+	KeyFunc cmp = buildKeyfunc(this->primaryKey.datatype);
+	if (leftCond.op == NULL){
+		if (rightCond.op == NULL){
+			data = tree.getAll();
+		}
+		else{
+			data = tree.getLessThan(rightCond.rightData.data, cmp);
+		}
+	}
+	else{
+		if (rightCond.op == NULL){
+			data = tree.getBiggerThan(leftCond.rightData.data, cmp);
+		}
+		else{
+			data = tree.getRange(leftCond.rightData.data, rightCond.rightData.data, cmp);
+		}
 	}
 
 }

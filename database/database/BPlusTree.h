@@ -17,8 +17,8 @@ const int LeafNodeCapacity = 5;
 typedef pair<PageNum, int> Locate;
 typedef pair<PageNum, NodeType> Target;
 typedef pair<Key, PageNum> InsertConsequence;
-typedef int(*KeyFunc) (string, string);
-typedef int(*RowFunc) (string, string);
+//typedef int(*KeyFunc) (string, string);
+typedef function<int(const string&, const string&)> KeyFunc;
 
 
 #define InterCap InteriorNodeCapacity
