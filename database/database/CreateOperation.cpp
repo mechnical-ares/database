@@ -39,7 +39,10 @@ string Inner2Text(string &s){
 Table CreateOperation::exec(){
 	tableName = cleanStr(tableName);
 	vector<Condition> emptyCondition;
-	Table temTable(cleanStr(tableName), emptyCondition);
+	Table temTable(tableName, emptyCondition);
+	temTable.primaryKey = primaryKey;
+	temTable.title = columns;
+
 	BPlusTree myBPtree(tableName,&temTable);
 	myBPtree.initTree(columns, primaryKey);
 
