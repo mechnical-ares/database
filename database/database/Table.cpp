@@ -48,7 +48,6 @@ string cleanStr(string s){
 }
 
 
-
 Table::Table(string tableName) :tableName(cleanStr(tableName)){
 	string path = string(".\\Data\\") + cleanStr(tableName);
 	ifstream fin(path.c_str());
@@ -90,24 +89,6 @@ Table::Table(string tableName) :tableName(cleanStr(tableName)){
 		}
 	}
 }
+Table::Table(string tableName, const vector<Condition> conditions){
 
-
-/*
-class Table{
-public:
-Table(string tableName);
-string tableName;
-vector<ColumnTitle> title;
-ColumnTitle primaryKey;
-vector<row> data;
-};
-struct ColumnTitle{
-string column_name;
-DataType datatype;
-};
-typedef vector<string> row;
-struct Data{
-DataType type;
-string data;
-};
-*/
+}
