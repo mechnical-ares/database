@@ -2,6 +2,21 @@
 #include "BPlusTree.h"
 #include "Disk.h"
 
+
+KeyFunc buildKeyfunc(DataType type){
+	auto fn = [&](string l, string r)->int {
+		if (l == r)
+			return 0;
+		Data ld{ type, l };
+		Data rd{ type, r };
+		if (isLT(ld, rd))
+			return -1;
+		else
+			return 1;
+	};
+	return fn;
+}
+
 int char2int(char s[], int l, int r, int base){
 	int ret = 0;
 	switch (base){
@@ -91,20 +106,20 @@ LeafNode::LeafNode(char s[512]) : Node(LEAF){
 }
 
 
-void BPlusTree::insert_into_tree(Key& newkey, Value& val, KeyFunc cmp){	
-	Target leaf = search(root, newkey, cmp);
-	InCons con = insert_into_leaf(leaf.first, newkey, val, cmp);
+void BPlusTree::insert_into_tree(Key& newkey, Value& val){	
+	Target leaf = search(root, newkey);
+	InCons con = insert_into_leaf(leaf.first, newkey, val);
 	while (con.page != 0){
-		con = insert_into_interior(con.father, con.key, con.page, cmp, con.left);
+		con = insert_into_interior(con.father, con.key, con.page, con.left);
 	}
 }
 
-InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, KeyFunc cmp, bool left){
+InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, bool left){
 	char s[512];
 	disk.readBlock(page, s);
 	Node node = createNode(s);
 	InteriorNode *p = (InteriorNode*)&node;
-	int i, j, size = (int)s[510], type = (int)s[511], father = char2int(s,505,509,128);
+	int size = (int)s[510], type = (int)s[511], father = char2int(s,505,509,128);
 	
 	vector<Key>::iterator itek = p->keys.begin();
 	vector<Page>::iterator itev = p->pointers.begin();
@@ -194,12 +209,12 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, KeyFu
 	}
 }
 
-InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val, KeyFunc cmp)
+InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val)
 {
 	char s[512];
 	disk.readBlock(page, s);
 	Node node = createNode(s);
-	int i,j,size = (int)s[510];
+	int i,size = (int)s[510];
 	LeafNode* p = (LeafNode*)(&node);
 	vector<Key>::iterator itek = p->keys.begin();
 	vector<Value>::iterator itev = p->values.begin();
@@ -243,13 +258,15 @@ InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val, KeyFunc c
 page 0, char[512]:
 511:type - NUL
 510:num of attributes, (the length of title), no bigger than 10
-500~509:the largest applied number, from 0(virtual root, *this), 1(real root), 2(first leaf)
-400~409:primaryKey
+505~509:the largest applied number, from 0(virtual root, *this), 1(real root), 2(first leaf)
+400~419:primaryKey
+420:type of primaryKey 
 0~199:keys + types (19+1)*10
 */
 BPlusTree::BPlusTree(string name, Table* t) :disk(name){
 	char s[512];
 	disk.readBlock(root, s);
+	cmp = buildKeyfunc((DataType)s[420]);
 	if (t != NULL){
 		t->tableName = name;
 		t->title.clear();
@@ -268,7 +285,7 @@ BPlusTree::BPlusTree(string name, Table* t) :disk(name){
 
 
 
-Target BPlusTree::search(Page page, Key& key, KeyFunc cmp){
+Target BPlusTree::search(Page page, Key& key){
 	char s[512];
 	disk.readBlock(page, s);
 	Node node = createNode(s);
@@ -278,13 +295,13 @@ Target BPlusTree::search(Page page, Key& key, KeyFunc cmp){
 	{
 		InteriorNode* p = (InteriorNode*)&node;
 		if (cmp(key, p->keys[0])<0)
-			return search(p->pointers[0], key, cmp);
+			return search(p->pointers[0], key);
 		else if (cmp(key, p->keys[p->keys.size() - 1])>0)
-			return search(p->pointers[p->keys.size()], key, cmp);
+			return search(p->pointers[p->keys.size()], key);
 		else
 		{
 			for (int i = 0; i<p->keys.size() - 1; i++) if (cmp(key, p->keys[i]) >= 0 && cmp(key, p->keys[i + 1])<0)
-				return search(p->pointers[i + 1], key, cmp);
+				return search(p->pointers[i + 1], key);
 		}
 	}
 	break;
@@ -346,8 +363,8 @@ vector<row> BPlusTree::getAll(){
 	return ret;
 }
 
-vector<row> BPlusTree::getLessThan(Key& key, KeyFunc cmp){
-	Target t = search(root, key, cmp);
+vector<row> BPlusTree::getLessThan(Key& key){
+	Target t = search(root, key);
 	vector<row> ret; ret.clear();
 	char s[512];
 	disk.readBlock(root, s);
@@ -375,8 +392,8 @@ fin:
 
 }
 
-vector<row> BPlusTree::getBiggerThan(Key& key, KeyFunc cmp){
-	Target t = search(root, key, cmp);
+vector<row> BPlusTree::getBiggerThan(Key& key){
+	Target t = search(root, key);
 	vector<row> ret; ret.clear();
 	char s[512];
 	disk.readBlock(t.first, s);
@@ -397,8 +414,8 @@ vector<row> BPlusTree::getBiggerThan(Key& key, KeyFunc cmp){
 	return ret;
 }
 
-vector<row> BPlusTree::getRange(Key& left, Key &right, KeyFunc cmp){
-	Target t = search(root, left, cmp);
+vector<row> BPlusTree::getRange(Key& left, Key &right){
+	Target t = search(root, left);
 	vector<row> ret; ret.clear();
 	char s[512];
 	disk.readBlock(t.first, s);
@@ -431,10 +448,13 @@ void BPlusTree::initTree(vector<ColumnTitle> &title, ColumnTitle primaryKey){
 	s[510] = (char)title.size();
 	int2char(s, 505, 509, 0, 128);
 	string2chars(s, 400, 419, primaryKey.column_name);
+	s[420] = (char)primaryKey.datatype;
 	for (int i = 0; i < title.size(); i++){
 		string2chars(s, i * 20, i * 20 + 18, title[i].column_name);
 		s[i * 20 + 19] = (char)title[i].datatype;
 	}
+
+
 }
 
 
