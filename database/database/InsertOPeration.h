@@ -5,9 +5,11 @@
 class InsertOperation :public Operation
 {
 public:
-	InsertOperation();
+	InsertOperation(string, vector<ColumnTitle>, vector<Data>);
+	InsertOperation(string, vector<Data>);
 	virtual Table exec();
 	string tableName;
 	vector<Data> data;
+	vector<ColumnTitle> title;
 };
 

@@ -413,17 +413,22 @@ Operation *parser(string t)
 						flag = true;
 					}					
 				}
-				if (flag)
+				if (!flag)
 					throw "error column " + stringTitle.at(j) + "not exist";
 			}
 
+
+			op = new InsertOperation(tableName, titles, datas);
 			/*cout << "columnname" << endl;
 			for (int i = 0; i < titles.size(); i++)
 			{
 				cout << titles.at(i).column_name << endl;
 			}*/
 		}
-
+		else
+		{
+			op = new InsertOperation(tableName, datas);
+		}
 		
 		//cout << tableName << endl;
 		//cout << tableName << endl;
@@ -436,7 +441,7 @@ Operation *parser(string t)
 			cout << datas.at(i).data << "///" << endl;
 		}*/
 
-		op = new InsertOperation(tableName,titles,datas);//todo
+		//todo
 	}
 	else if (type == "DELETE" || type == "delete")
 	{
