@@ -38,7 +38,9 @@ string Inner2Text(string &s){
 
 Table CreateOperation::exec(){
 	tableName = cleanStr(tableName);
-	BPlusTree myBPtree(tableName,NULL);
+	vector<Condition> emptyCondition;
+	Table temTable(cleanStr(tableName), emptyCondition);
+	BPlusTree myBPtree(tableName,&temTable);
 	myBPtree.initTree(columns, primaryKey);
 
 	/*string path = string(".\\Data\\") + tableName;
@@ -66,8 +68,7 @@ Table CreateOperation::exec(){
 		throw info;
 	}*/
 
-	vector<Condition> emptyCondition;
-	return Table(cleanStr(tableName), emptyCondition);
+	return temTable;
 }
 
 
