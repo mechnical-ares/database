@@ -91,7 +91,7 @@ LeafNode::LeafNode(char s[512]) : Node(LEAF){
 }
 
 
-void BPlusTree::insert_into_tree(Page page, Key& newkey, Value& val, KeyFunc cmp){	
+void BPlusTree::insert_into_tree(Key& newkey, Value& val, KeyFunc cmp){	
 	Target leaf = search(root, newkey, cmp);
 	InCons con = insert_into_leaf(leaf.first, newkey, val, cmp);
 	while (con.page != 0){
@@ -247,9 +247,9 @@ page 0, char[512]:
 400~409:primaryKey
 0~199:keys + types (19+1)*10
 */
-BPlusTree::BPlusTree(string name, Table* t = NULL) :disk(name){
+BPlusTree::BPlusTree(string name, Table* t) :disk(name){
 	char s[512];
-	disk.readBlock(0, s);
+	disk.readBlock(root, s);
 	if (t != NULL){
 		t->tableName = name;
 		t->title.clear();
