@@ -10,7 +10,7 @@ class Table{
 public:
 	Table(){}
 	Table(string tableName);
-	Table(string tableName, const vector<Condition> conditions);
+	Table(string tableName, const vector<Condition>& conditions);
 	string tableName;
 	vector<ColumnTitle> title;
 	ColumnTitle primaryKey;

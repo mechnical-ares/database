@@ -90,6 +90,21 @@ Table::Table(string tableName) :tableName(cleanStr(tableName)){
 		}
 	}
 }
-Table::Table(string tableName, const vector<Condition> conditions){
+Table::Table(string tableName, const vector<Condition>& conditions){
+	BPlusTree tree(tableName,this);
+	Condition leftCond, rightCond;
+	for (const Condition& condition : conditions){
+		const auto& left = condition.left;
+		const auto& right = condition.right;
+		if (condition.isRightConst && left.tableName == tableName && left.colunmName == this->primaryKey.column_name){
+			if (condition.op == isGT || condition.op == isGE){
+				leftCond = condition;
+			}
+			else if (condition.op == isLT || condition.op == isLE){
+				rightCond = condition;
+			}
+		}
+
+	}
 
 }
