@@ -194,7 +194,7 @@ public:
 	~BPlusTree();
 	void initTree(vector<ColumnTitle> &title, ColumnTitle primaryKey);
 	Target search(Page node, Key& key, KeyFunc cmp);
-	Target insert_into_tree(Page node, Key& newkey, Value& val, KeyFunc cmp);
+	void insert_into_tree(Page node, Key& newkey, Value& val, KeyFunc cmp);
 	InCons insert_into_leaf(Page page, Key& newkey, Value& val, KeyFunc cmp);
 	InCons insert_into_interior(Page page, Key& newkey, Page child, KeyFunc cmp, bool left=false);
 

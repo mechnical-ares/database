@@ -36,7 +36,7 @@ LeafNode::LeafNode(char s[512]) : Node(LEAF){
 }
 
 
-Target BPlusTree::insert_into_tree(Page page, Key& newkey, Value& val, KeyFunc cmp){	
+void BPlusTree::insert_into_tree(Page page, Key& newkey, Value& val, KeyFunc cmp){	
 	Target leaf = search(root, newkey, cmp);
 	InCons con = insert_into_leaf(leaf.first, newkey, val, cmp);
 	while (con.page != 0){
@@ -77,14 +77,14 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, KeyFu
 			InteriorNode newinter1, newinter2;
 			newinter1.keys.clear(); newinter1.pointers.clear();
 			newinter2.keys.clear(); newinter2.pointers.clear();
-			int half = size / 2;
-			for (int i = 0; i < half; i++){
+			int half = size / 2,i=0;
+			for (i = 0; i < half; i++){
 				newinter1.keys.push_back(p->keys[i]);
 				newinter1.pointers.push_back(p->pointers[i]);
 			}
 			newinter1.pointers.push_back(p->pointers[i]);
 
-			for (int i = half + 1; i < size; i++){
+			for (i = half + 1; i < size; i++){
 				newinter2.keys.push_back(p->keys[i]);
 				newinter2.pointers.push_back(p->pointers[i]);
 			}
@@ -113,8 +113,8 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, KeyFu
 			Page newpage = nextApply++;
 			InteriorNode newinter;
 			newinter.keys.clear(); newinter.pointers.clear();
-			int half = size / 2;
-			for (int i = half+1; i < size; i++){
+			int half = size / 2,i;
+			for (i = half+1; i < size; i++){
 				newinter.keys.push_back(p->keys[i]);
 				newinter.pointers.push_back(p->pointers[i]);
 			}
@@ -166,7 +166,7 @@ InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val, KeyFunc c
 	LeafNode newleaf;
 	newleaf.keys.clear(); newleaf.values.clear();
 	int half = size / 2;
-	for (int i = size / 2; i < size; i++){
+	for (i = size / 2; i < size; i++){
 		newleaf.keys.push_back(p->keys[i]);
 		newleaf.values.push_back(p->values[i]);
 	}
