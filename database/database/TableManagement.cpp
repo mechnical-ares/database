@@ -34,10 +34,11 @@ int TableManagement::hasColumn(string TableName, string ColumnName){
 int TableManagement::addTable(TableInfo t){
 	if (hasTable(t.Tablename))
 		return false;
-	else
+	else{
 		TableInfomation.push_back(t);
-	TableNum++;
-	return true;
+		TableNum++;
+		return true;
+	}
 }
 vector<TableInfo> TableManagement::getTablebyColumn(string ColumnName){
 	vector<TableInfo> Tables;
@@ -63,7 +64,7 @@ vector<string> TableManagement::getColumnbyTable(string TableName){
 			return Column;
 		}
 	}
-	throw "Table Not Found";
+	throw "Table"+TableName+" Not Found";
 }
 DataType TableManagement::getDataType(string TableName, string ColumnName){
 	DataType t;
@@ -78,5 +79,17 @@ DataType TableManagement::getDataType(string TableName, string ColumnName){
 				}
 		}
 	}
-	throw "T And C Not Found";
+	throw "Table"+TableName+" And "+ColumnName +" Not Found";
+}
+ColumnTitle TableManagement::getPrimaryKey(string TableName){
+	ColumnTitle t;
+	for (int i = 0; i < TableInfomation.size(); i++)
+	{
+		if (TableInfomation.at(i).Tablename == TableName)
+		{
+			t = TableInfomation.at(i).primaryKey;
+			return t;
+		}
+	}
+	throw "Table "+ TableName +" Not Found";
 }

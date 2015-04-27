@@ -91,7 +91,6 @@ string cleanStr(string s){
 //	}
 //}
 
-
 Table::Table(string tableName, const vector<Condition>& conditions){
 	BPlusTree tree(tableName,this);
 	Condition leftCond, rightCond;
@@ -109,7 +108,7 @@ Table::Table(string tableName, const vector<Condition>& conditions){
 		}
 	}
 
-	KeyFunc cmp = buildKeyfunc(this->primaryKey.datatype);
+	
 	if (leftCond.op == NULL){
 		if (rightCond.op == NULL){
 			data = tree.getAll();
