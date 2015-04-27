@@ -74,3 +74,8 @@ Disk::~Disk(){
 		fclose(meta_file);
 }
 
+int Disk::clearBlock(const int id, const char data = 0){
+	char buffer[BLOCK_SIZE];
+	memset(buffer, data, sizeof buffer);
+	return writeBlock(id, buffer);
+}

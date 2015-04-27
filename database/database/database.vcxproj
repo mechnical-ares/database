@@ -82,7 +82,7 @@
     <ClInclude Include="CreateOperation.h" />
     <ClInclude Include="DeleteOperation.h" />
     <ClInclude Include="Disk.h" />
-    <ClInclude Include="InsertOPeration.h" />
+    <ClInclude Include="InsertOperation.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="QueryOperation.h" />
     <ClInclude Include="stdafx.h" />
@@ -94,7 +94,7 @@
     <ClCompile Include="database.cpp" />
     <ClCompile Include="DeleteOperation.cpp" />
     <ClCompile Include="Disk.cpp" />
-    <ClCompile Include="InsertOPeration.cpp" />
+    <ClCompile Include="InsertOperation.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="QueryOperation.cpp" />
     <ClCompile Include="stdafx.cpp">

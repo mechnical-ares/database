@@ -81,6 +81,37 @@ vector<string> split(string str, string pattern, string pattern2)//去掉括号函数c
 	}
 	return result;
 }
+
+vector<string> split(string str, string pattern, string pattern2, string pattern3, string pattern4)//去掉括号函数insert时使用
+{
+	std::string::size_type pos;
+	std::string::size_type minpos;
+	std::vector<std::string> result;
+	str += " ";//扩展字符串以方便操作
+	int size = str.size();
+
+	for (int i = 0; i<size; i++)
+	{
+		minpos = str.find(pattern, i);
+		pos = str.find(pattern2, i);
+		minpos = (minpos < pos ? minpos : pos);
+		pos = str.find(pattern3, i);
+		minpos = (minpos < pos ? minpos : pos);
+		pos = str.find(pattern4, i);
+
+		pos = (minpos < pos ? minpos : pos);
+
+		if (pos<size)
+		{
+			std::string s = str.substr(i, pos - i);
+			if (pos - i != 0)
+				result.push_back(s);
+			i = pos + pattern.size() - 1;
+		}
+	}
+	return result;
+}
+
 TableColumn TransTandC(string t)//转换 string里面t.c为具体表列，select时使用
 {
 	TableColumn temp;
@@ -88,14 +119,14 @@ TableColumn TransTandC(string t)//转换 string里面t.c为具体表列，select时使用
 	if (tandc.size() == 2)
 	{
 		if (TableManager.hasColumn(tandc.at(0), tandc.at(1))){
-			temp.tableName = tandc.at(0);
-			temp.colunmName = tandc.at(1);
-			return temp;
-		}
-		else{
-			throw  "Column " + tandc.at(1) + "Not Found In Table " + tandc.at(0);
-		}
+		temp.tableName = tandc.at(0);
+		temp.colunmName = tandc.at(1);
+		return temp;
 	}
+	else{
+			throw  "Column " + tandc.at(1) + "Not Found In Table " + tandc.at(0);
+	}
+}
 	else{
 		if (TableManager.getTablebyColumn(t).size() == 1)
 		{
@@ -105,7 +136,7 @@ TableColumn TransTandC(string t)//转换 string里面t.c为具体表列，select时使用
 		}
 		else if (TableManager.getTablebyColumn(t).size() == 0){
 			throw  "Column " + t + " Not Found" ;
-			
+
 		}
 		else{
 			throw  "Column " + t + " Found In Many Tables" ;
@@ -248,9 +279,9 @@ Operation *parser(string t)
 			selectallcolumns = true;
 		}
 		else{
-			for (int i = 0; i < columnandtable.size(); i++){//抽取表-列对应关系
-				TC.push_back(TransTandC(columnandtable.at(i)));
-			}
+		for (int i = 0; i < columnandtable.size(); i++){//抽取表-列对应关系
+			TC.push_back(TransTandC(columnandtable.at(i)));
+		}
 		}
 		count++;
 		if (allwords.at(count) != "from"&&allwords.at(count) != "FROM"){
@@ -272,25 +303,25 @@ Operation *parser(string t)
 				else{
 					throw  "Table" + table.at(i) + " Not Found" ;
 				}
-			}
+		}
 		}
 		count++;
 		if (allwords.size()>count){
-			if (allwords.at(count) != "where"&&allwords.at(count) != "WHERE"){
+		if (allwords.at(count) != "where"&&allwords.at(count) != "WHERE"){
 				throw  "Keyword Where Not Found";
-			}
-			count++;
+		}
+		count++;
 		}
 		vector<string> equations = split(allwords.at(count), ",");//条件用,分词
 		vector<Condition> conds;
 		for (int i = 0; i < equations.size(); i++)
 		{
 			conds.push_back(Transcond(equations.at(i)));
-		}
+		} 
 		op = new QueryOperation(TC, table, conds);
 	}
 	else if(type == "CREATE" || type == "create")//creat table by TZH//分词时注意类型表名后面必须接 空格；主键不能接空格，必须直接接括号
-	{
+		{
 			string tableName = "";//
 			vector<string> allwords = split(t, " (", ") ");
 			/*for (int i = 0; i < allwords.size(); i++)
@@ -319,7 +350,32 @@ Operation *parser(string t)
 		}
 	else if (type == "INSERT" || type == "insert")
 	{
+		string tableName = "";//
+		vector<Data> datas;
+		vector<string> allwords = split(t, " values ");
+		/*for (int i = 0; i < allwords.size(); i++)
+		cout << allwords.at(i) << endl;*/
+		vector<string> firstPart = split(allwords.at(0), " ");
+		tableName = firstPart.at(2);//third word is the table name
+		cout << tableName << endl;
+		//cout << tableName << endl;
 
+		vector<string> stringDatas = split(allwords.at(1), ",", "'", "(", ")");
+		
+
+		for (int i = 0; i < stringDatas.size(); i++)
+		{
+			datas.push_back(Data((DataType)0, stringDatas.at(i)));
+			//cout << columnAndType.at(i) << endl;
+		}
+
+		cout << "data test" << endl;
+		for (int i = 0; i < datas.size(); i++)
+		{
+			cout << datas.at(i).data << "///" << endl;
+		}
+
+		op = new InsertOperation(tableName,datas);//todo
 	}
 	else if (type == "DELETE" || type == "delete")
 	{
