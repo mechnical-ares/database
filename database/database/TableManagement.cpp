@@ -2,6 +2,7 @@
 
 TableManagement::TableManagement()
 {
+	
 }
 
 
@@ -35,6 +36,7 @@ int TableManagement::addTable(TableInfo t){
 		return false;
 	else
 		TableInfomation.push_back(t);
+	TableNum++;
 	return true;
 }
 vector<TableInfo> TableManagement::getTablebyColumn(string ColumnName){
