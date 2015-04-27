@@ -91,51 +91,71 @@ ColumnTitle TransCandT(string t)//×ª»» stringÀïÃæa stringÎª¾ßÌå±íµÄÊôĞÔ£¬createÊ
 		abort();
 	}
 }
-
+bool isNotConst(string t){//ÅĞ¶ÏÔËËã·ûÁ½²àµÄ×Ö·û´®ÊÇ³£Á¿·ñ
+	if (t.at(0) == '"'&&t.at(t.size() - 1) == '"')//Èç¹ûÊÇstringÀàĞÍ³£Á¿£¬Ó¦¸ÃÓÉË«ÒıºÅ°ü¹ü£¬Ö±½Ó·µ»Øfalse
+		return false;
+	if (split(t, ".").size() == 1)//Èç¹ûÊÇÆäËûÀàĞÍ³£Á¿£¬ÔòÖĞ¼ä²»»á°üº¬.£¬Òò´Ë¿ÉÒÔÓÃÊÇ·ñ°üº¬µãÀ´ÅĞ¶Ï
+		return false;
+	return true;//Á½¸ö¶¼²»·ûºÏ£¬²»ÊÇ³£Á¿
+}
 Condition Transcond(string t){
 	Condition temp;
 	vector<string> cond;
+	Data ld, rd;
 	if ((cond = split(t, "==")).size() == 2)
 	{
-		temp.left = TransTandC(cond.at(0));
-		temp.right = TransTandC(cond.at(1));
 		temp.op = isEQ;//==
+		goto fuzhi;
 	}
 	else{
 		if ((cond = split(t, ">")).size() == 2)
 		{
-			temp.left = TransTandC(cond.at(0));
-			temp.right = TransTandC(cond.at(1));
 			temp.op = isGT;//>
+			goto fuzhi;
 		}
 		else
 			if ((cond = split(t, "<")).size() == 2)
 			{
-				temp.left = TransTandC(cond.at(0));
-				temp.right = TransTandC(cond.at(1));
 				temp.op = isLT;//<
+				goto fuzhi;
 			}
 			else
 				if ((cond = split(t, "!=")).size() == 2)
 				{
-					temp.left = TransTandC(cond.at(0));
-					temp.right = TransTandC(cond.at(1));
 					temp.op = isNE;//!=
+					goto fuzhi;
 				}
 				else
 					if ((cond = split(t, ">=")).size() == 2)
 					{
-						temp.left = TransTandC(cond.at(0));
-						temp.right = TransTandC(cond.at(1));
 						temp.op = isGE;//>=
+						goto fuzhi;
 					}
 					else
 						if ((cond = split(t, "<=")).size() == 2)
 						{
-							temp.left = TransTandC(cond.at(0));
-							temp.right = TransTandC(cond.at(1));
 							temp.op = isLE;//<=
+							goto fuzhi;
 						}
+	}
+fuzhi:	
+	if (isNotConst(cond.at(0)))
+	{
+		temp.left = TransTandC(cond.at(0));
+	}
+	else{
+		ld = Data(DB_CONST, cond.at(0));
+		temp.isLeftConst = TRUE;
+		temp.leftData = ld;
+	}
+	if (isNotConst(cond.at(1)))
+	{
+		temp.right = TransTandC(cond.at(1));
+	}
+	else{
+		rd = Data(DB_CONST, cond.at(1));
+		temp.isRightConst = TRUE;
+		temp.rightData = rd;
 	}
 	return temp;
 }
@@ -206,9 +226,7 @@ Operation *parser(string t)
 		} 
 		op = new QueryOperation(TC, table, conds);
 	}
-	else{
-		//·Ö´ÊÊ±×¢ÒâÀàĞÍ±íÃûºóÃæ±ØĞë½Ó ¿Õ¸ñ£»Ö÷¼ü²»ÄÜ½Ó¿Õ¸ñ£¬±ØĞëÖ±½Ó½ÓÀ¨ºÅ
-		if (type == "CREATE" || type == "create")//creat table by TZH
+	else if (type == "CREATE" || type == "create")//creat table by TZH//·Ö´ÊÊ±×¢ÒâÀàĞÍ±íÃûºóÃæ±ØĞë½Ó ¿Õ¸ñ£»Ö÷¼ü²»ÄÜ½Ó¿Õ¸ñ£¬±ØĞëÖ±½Ó½ÓÀ¨ºÅ
 		{
 			string tableName = "";//
 			vector<string> allwords = split(t, " (", ") ");
@@ -237,6 +255,13 @@ Operation *parser(string t)
 			//cout << "primary key:" << primaryKey;
 			op = new CreateOperation(tableName, CTs, primaryKey);
 		}
+	else if (type == "INSERT" || type == "insert")
+	{
+
+	}
+	else if (type == "DELETE" || type == "delete")
+	{
+
 	}
 	return op;
 }
