@@ -1,6 +1,7 @@
 #include "stdafx.h"
 using namespace std;
 TableManagement TableManager;
+stringstream ss;
 //×Ö·û´®·Ö¸îº¯Êý
 vector<string> split(string str, string pattern)
 {
@@ -275,7 +276,10 @@ Operation *parser(string t)
 		for (int i = 0; i < allwords.size(); i++){
 			if (issubQuery(allwords.at(i)))
 			{
-
+				Table result=parser(allwords.at(i))->exec();
+				ss << TableManager.TableNum;
+				ss >> result.tableName;
+				allwords.at(i) = result.tableName;
 			}
 		}
 		vector<TableColumn> TC;
