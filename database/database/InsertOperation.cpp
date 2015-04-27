@@ -13,3 +13,8 @@ InsertOperation::InsertOperation(string tableName, vector<Data> datas)
 {
 
 }
+
+Table InsertOperation::exec(){
+	BPlusTree temBptree(tableName, NULL);
+
+}
