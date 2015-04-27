@@ -49,47 +49,47 @@ string cleanStr(string s){
 }
 
 
-Table::Table(string tableName) :tableName(cleanStr(tableName)){
-	string path = string(".\\Data\\") + cleanStr(tableName);
-	ifstream fin(path.c_str());
-	if (!fin){
-		string info = "No table found!\n";
-		throw info;
-	}
-	else{
-		char s[1000];
-		fin.getline(s, 1000); // Name
-
-		fin.getline(s, 1000); //Attributes
-		this->title.clear();
-		for (int i = 0, len = 0; i <= strlen(s); i++){
-			if (s[i] == ',' || s[i] == '\n' || s[i] == '\0')
-				this->title.push_back(ColumnTitle(Text2Inner(&s[i - len], len))), len = 0;
-			else len++;
-		}
-
-		vector<DataType> types;
-		int tmp;
-		types.clear();
-		fin.getline(s, 1000); //DataType
-		for (int i = 0,j=0, len = 0; i < this->title.size(); i++,j+=2){
-			tmp = s[j] - '0';
-			types.push_back((DataType)tmp);
-			this->title[i].datatype = types[i];
-		}
-
-		this->data.clear();
-		while (fin.getline(s, 1000)){ //Data
-			row r;	r.clear();
-			for (int i = 0, len = 0; i <= strlen(s); i++){
-				if (s[i] == ',' || s[i] == '\n' || s[i] == '\0')
-					r.push_back(Text2Inner(&s[i - len], len)),len=0;
-				else len++;
-			}
-			this->data.push_back(r);
-		}
-	}
-}
+//Table::Table(string tableName) :tableName(cleanStr(tableName)){
+//	string path = string(".\\Data\\") + cleanStr(tableName);
+//	ifstream fin(path.c_str());
+//	if (!fin){
+//		string info = "No table found!\n";
+//		throw info;
+//	}
+//	else{
+//		char s[1000];
+//		fin.getline(s, 1000); // Name
+//
+//		fin.getline(s, 1000); //Attributes
+//		this->title.clear();
+//		for (int i = 0, len = 0; i <= strlen(s); i++){
+//			if (s[i] == ',' || s[i] == '\n' || s[i] == '\0')
+//				this->title.push_back(ColumnTitle(Text2Inner(&s[i - len], len))), len = 0;
+//			else len++;
+//		}
+//
+//		vector<DataType> types;
+//		int tmp;
+//		types.clear();
+//		fin.getline(s, 1000); //DataType
+//		for (int i = 0,j=0, len = 0; i < this->title.size(); i++,j+=2){
+//			tmp = s[j] - '0';
+//			types.push_back((DataType)tmp);
+//			this->title[i].datatype = types[i];
+//		}
+//
+//		this->data.clear();
+//		while (fin.getline(s, 1000)){ //Data
+//			row r;	r.clear();
+//			for (int i = 0, len = 0; i <= strlen(s); i++){
+//				if (s[i] == ',' || s[i] == '\n' || s[i] == '\0')
+//					r.push_back(Text2Inner(&s[i - len], len)),len=0;
+//				else len++;
+//			}
+//			this->data.push_back(r);
+//		}
+//	}
+//}
 
 KeyFunc buildKeyfunc(DataType type){
 	auto fn =  [&](string l, string r)->int {

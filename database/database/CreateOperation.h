@@ -13,6 +13,7 @@ class CreateOperation : public Operation
 public:
 	string tableName;
 	vector<ColumnTitle> columns;
+	ColumnTitle primaryKey;
 	CreateOperation(string tableName, vector<ColumnTitle> columns, ColumnTitle primaryKey);
 	virtual Table exec();
 };

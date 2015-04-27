@@ -10,9 +10,10 @@ struct ColumnTitle{
 string column_name;
 DataType datatype;
 };*/
-CreateOperation::CreateOperation(string tableName, vector<ColumnTitle> columns, ColumnTitle primaryKey = {}) :tableName(tableName), columns(columns)
+CreateOperation::CreateOperation(string tableName, vector<ColumnTitle> columns, ColumnTitle primaryKey = {})
+	:tableName(tableName), columns(columns), primaryKey(primaryKey)
 {
-	//
+	
 }
 
 string Inner2Text(const char s[]){
@@ -37,7 +38,10 @@ string Inner2Text(string &s){
 
 Table CreateOperation::exec(){
 	tableName = cleanStr(tableName);
-	string path = string(".\\Data\\") + tableName;
+	BPlusTree myBPtree(tableName,NULL);
+	myBPtree.initTree(columns, primaryKey);
+
+	/*string path = string(".\\Data\\") + tableName;
 	ifstream test(path.c_str());
 	if (test){
 		string info = "The table is already in your computer!\n";
@@ -60,9 +64,10 @@ Table CreateOperation::exec(){
 	{
 		string info = "Create table failed!\n";
 		throw info;
-	}
+	}*/
 
-	return Table(cleanStr(tableName));
+	vector<Condition> emptyCondition;
+	return Table(cleanStr(tableName), emptyCondition);
 }
 
 
