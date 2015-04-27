@@ -55,8 +55,10 @@ string char2string(char s[], int l, int r){
 }
 
 Node::Node(NodeType _type) :type(_type){}
-
-
+Node::~Node(){}
+InteriorNode::~InteriorNode(){}
+LeafNode::~LeafNode(){}
+BPlusTree::~BPlusTree(){}
 InteriorNode::InteriorNode() : Node(INTERIOR){}
 InteriorNode::InteriorNode(char s[], NodeType _type) : Node(_type){
 	keys.clear(); pointers.clear();
