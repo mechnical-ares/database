@@ -330,6 +330,11 @@ Operation *parser(string t)
 			tableName = firstPart.at(2);//third word is the table name
 			//cout << tableName << endl;
 
+			if (TableManager.hasTable(tableName))
+			{
+				throw "Table already exist!";
+			}
+
 			vector<string> columnAndType = split(allwords.at(1), ",");
 			vector<ColumnTitle> CTs;
 
