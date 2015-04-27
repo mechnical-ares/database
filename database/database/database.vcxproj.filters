@@ -39,10 +39,10 @@
     <ClInclude Include="Disk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InsertOPeration.h">
+    <ClInclude Include="DeleteOperation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DeleteOperation.h">
+    <ClInclude Include="InsertOperation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,10 +68,10 @@
     <ClCompile Include="Disk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InsertOPeration.cpp">
+    <ClCompile Include="DeleteOperation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeleteOperation.cpp">
+    <ClCompile Include="InsertOperation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
