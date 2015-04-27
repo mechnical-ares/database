@@ -236,9 +236,9 @@ fuzhi:
 			else{
 				temp.right = TransTandC(cond.at(1));
 				ld = Data(TableManager.getDataType(temp.right.tableName, temp.right.colunmName), cond.at(0));
-		temp.isLeftConst = TRUE;
-		temp.leftData = ld;
-	}
+				temp.isLeftConst = TRUE;
+				temp.leftData = ld;
+			}
 		}	
 	}
 	else{
@@ -260,10 +260,9 @@ bool iscolandtab(string str)
 	else
 		return false;
 }
-
 Operation *parser(string t)
 {
-	if (issubQuery(t)){//如最外层有括号包裹，去掉括号
+	while (issubQuery(t)){//如最外层有括号包裹，去掉括号
 		t = t.substr(1, t.length() - 2);
 	}
 	string type = t.substr(0, 6);//操作类型
@@ -273,6 +272,12 @@ Operation *parser(string t)
 	if (type == "SELECT" || type == "select")//判断类型
 	{
 		vector<string> allwords = splitnotbracket(t, " ");//按照空格先分词,如果是括号包裹的，先不分
+		for (int i = 0; i < allwords.size(); i++){
+			if (issubQuery(allwords.at(i)))
+			{
+
+			}
+		}
 		vector<TableColumn> TC;
 		bool selectallcolumns=false;
 		count++;
