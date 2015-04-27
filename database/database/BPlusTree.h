@@ -2,8 +2,7 @@
 
 #define Key string
 #define Value row
-#define PagePointer int
-#define PageNum int
+#define Page int
 #define root 1
 
 enum NodeType
@@ -11,15 +10,22 @@ enum NodeType
 	NUL = 0, ROOT, INTERIOR, LEAF
 };
 
-const int InteriorNodeCapacity = 25;
-const int LeafNodeCapacity = 5;
+const int InteriorNodeCapacity = 20;
+const int LeafNodeCapacity = 3;
 
-typedef pair<PageNum, int> Locate;
-typedef pair<PageNum, NodeType> Target;
-typedef pair<Key, PageNum> InsertConsequence;
+typedef pair<Page, int> Locate;
+typedef pair<Page, NodeType> Target;
+
 typedef int(*KeyFunc) (string, string);
 typedef int(*RowFunc) (string, string);
-
+struct InsertConsequence
+{
+	Key key; Page page; Page father;
+	bool left;
+	InsertConsequence(Key k="", Page p=0, Page f=0,bool l=false){
+		key = k, page = p, father = f, left = l;
+	}
+};
 
 #define InterCap InteriorNodeCapacity
 #define LeafCap LeafNodeCapacity
@@ -29,11 +35,18 @@ int char2int(char s[], int l, int r, int base = 10){
 	int ret = 0;
 	switch (base){
 	case 10:
-		if (l >= r) return 0;
-		for (int i = l; i<r; i++) if (s[i] != 0){
+		if (l > r) return 0;
+		for (int i = l; i<=r; i++) if (s[i] != 0){
 			ret = ret*base + (s[i] - '0');
 		}
 		break;
+	case 128:
+	{
+		while (s[l] == 0 && l <= r) l++;
+		for (; l <= r; l++){
+			ret = ret * 128 + (int)s[l];
+		}
+	}
 
 	default: break;
 	}
@@ -42,7 +55,7 @@ int char2int(char s[], int l, int r, int base = 10){
 
 string char2string(char s[], int l, int r){
 	string ret = "";
-	for (int i = l; i<r; i++) if (s[i] != 0)
+	for (int i = l; i<=r; i++) if (s[i] != 0)
 		ret.push_back(s[i]);
 	return ret;
 }
@@ -54,6 +67,7 @@ class Node
 {
 public:
 	NodeType type;
+	Page father;
 	Node(NodeType _type = LEAF);
 	~Node();
 
@@ -71,6 +85,16 @@ char s[512]:
 509: num of attributes, (size of vector)
 0~499: keys and values, (20+10*8)*5
 500~508: next_page pointer
+
+
+char s[512]:
+511: type
+510: size  //num of nodes, force to int
+509: num of attributes, (size of vector)
+504~508: next_page pointer, base 128
+499~503: prev_page pointer, base 128
+494~498: father pointer, base 128
+0~479: keys and values, (20+20*7)*3
 */
 class LeafNode : public Node
 {
@@ -80,8 +104,9 @@ public:
 	~LeafNode();
 	vector<Key> keys;
 	vector<Value> values;
-	PagePointer next_page;
-	void Write2Disk();
+	Page next_page;
+	Page prev_page;
+	void Write2Disk(int page);
 };
 
 
@@ -99,6 +124,13 @@ char s[512]:
 0~509: keys + pointers , 10 char per
 0~9: first pointer
 500~509: the final pointer (if the node is full)
+
+char s[512]:
+511: type
+510: size  //force to int
+505~509: father point
+0~504: keys + pointers, 5 + (20 + 5)*20
+
 */
 class InteriorNode : public Node
 {
@@ -107,9 +139,9 @@ public:
 	InteriorNode(char s[], NodeType _type = INTERIOR);
 	~InteriorNode();
 	vector<Key> keys;
-	vector<PagePointer> pointers;
+	vector<Page> pointers;
 	
-	void Write2Disk();
+	void Write2Disk(Page page);
 };
 
 
@@ -156,14 +188,15 @@ class BPlusTree
 {
 private:
 	Disk disk;
-	PageNum nextApply;
+	Page nextApply;
 public:
 	BPlusTree(string, Table*);
 	~BPlusTree();
 	void initTree(vector<ColumnTitle> &title, ColumnTitle primaryKey);
-	Target search(PageNum node, Key& key, KeyFunc cmp);
-	Target insert_into_tree(PageNum node, Key& newkey, Value& val, KeyFunc cmp);
-	InCons insert_into_node(Target target, Key& newkey, Value& val, KeyFunc cmp);
+	Target search(Page node, Key& key, KeyFunc cmp);
+	Target insert_into_tree(Page node, Key& newkey, Value& val, KeyFunc cmp);
+	InCons insert_into_leaf(Page page, Key& newkey, Value& val, KeyFunc cmp);
+	InCons insert_into_interior(Page page, Key& newkey, Page child, KeyFunc cmp, bool left=false);
 
 	vector<row> getAll();
 	vector<row> getLessThan(Key& key, KeyFunc cmp); // included
