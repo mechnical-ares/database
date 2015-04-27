@@ -81,7 +81,6 @@ vector<string> split(string str, string pattern, string pattern2)//去掉括号函数c
 	}
 	return result;
 }
-
 vector<string> split(string str, string pattern, string pattern2, string pattern3, string pattern4)//去掉括号函数insert时使用
 {
 	std::string::size_type pos;
@@ -111,7 +110,6 @@ vector<string> split(string str, string pattern, string pattern2, string pattern
 	}
 	return result;
 }
-
 TableColumn TransTandC(string t)//转换 string里面t.c为具体表列，select时使用
 {
 	TableColumn temp;
@@ -144,7 +142,6 @@ TableColumn TransTandC(string t)//转换 string里面t.c为具体表列，select时使用
 		}
 	}
 }
-
 ColumnTitle TransCandT(string t)//转换 string里面a string为具体表的属性，create时使用
 {
 	ColumnTitle temp;
@@ -222,26 +219,31 @@ Condition Transcond(string t){
 						}
 	}
 fuzhi:	
-	if (isNotConst(cond.at(0)))
+	if ((temp.isRightConst= !isNotConst(cond.at(0))) || (temp.isRightConst = !isNotConst(cond.at(1))))
 	{
+		if (!temp.isLeftConst&&!temp.isRightConst)
+		{
 		temp.left = TransTandC(cond.at(0));
+			temp.right = TransTandC(cond.at(1));
 	}
 	else{
-		ld = Data(DB_CONST, cond.at(0));
+			if (temp.isRightConst){
+				temp.left = TransTandC(cond.at(0));
+				rd = Data(TableManager.getDataType(temp.left.tableName,temp.left.colunmName), cond.at(1));
+				temp.isRightConst = TRUE;
+				temp.rightData = rd;
+			}
+			else{
+				temp.right = TransTandC(cond.at(1));
+				ld = Data(TableManager.getDataType(temp.right.tableName, temp.right.colunmName), cond.at(0));
 		temp.isLeftConst = TRUE;
 		temp.leftData = ld;
 	}
-	if (isNotConst(cond.at(1)))
-	{
-		temp.right = TransTandC(cond.at(1));
+		}	
 	}
 	else{
-		rd = Data(DB_CONST, cond.at(1));
-		temp.isRightConst = TRUE;
-		temp.rightData = rd;
+		throw  "Condition Not Valid";
 	}
-	if (temp.isLeftConst&&temp.isRightConst)
-		throw  "Condition Not Valid" ;
 	return temp;
 }
 bool issubQuery(string str)
@@ -261,7 +263,7 @@ bool iscolandtab(string str)
 
 Operation *parser(string t)
 {
-	if (issubQuery(t)){//如有括号包裹，去掉括号
+	if (issubQuery(t)){//如最外层有括号包裹，去掉括号
 		t = t.substr(1, t.length() - 2);
 	}
 	string type = t.substr(0, 6);//操作类型
@@ -285,7 +287,7 @@ Operation *parser(string t)
 		}
 		count++;
 		if (allwords.at(count) != "from"&&allwords.at(count) != "FROM"){
-			throw  "KeyWord \"Fro\"m Not Found";
+			throw  "KeyWord \"From\" Not Found";
 		}
 		count++;
 		vector<string> table = split(allwords.at(count), ",");//获取表名
@@ -316,6 +318,7 @@ Operation *parser(string t)
 		vector<Condition> conds;
 		for (int i = 0; i < equations.size(); i++)
 		{
+
 			conds.push_back(Transcond(equations.at(i)));
 		} 
 		op = new QueryOperation(TC, table, conds);
@@ -329,6 +332,11 @@ Operation *parser(string t)
 			vector<string> firstPart = split(allwords.at(0), " ");
 			tableName = firstPart.at(2);//third word is the table name
 			//cout << tableName << endl;
+
+			if (TableManager.hasTable(tableName))
+			{
+				throw "Table already exist!";
+			}
 
 			vector<string> columnAndType = split(allwords.at(1), ",");
 			vector<ColumnTitle> CTs;
@@ -346,22 +354,44 @@ Operation *parser(string t)
 			string primaryKey = split(columnAndType.at(columnAndType.size() - 1), "(", ")").at(1);
 
 			//cout << "primary key:" << primaryKey;
+
+
 			op = new CreateOperation(tableName, CTs, primaryKey);
+			TableInfo newtableinfo(CTs, tableName);
+			TableManager.addTable(newtableinfo);
 		}
 	else if (type == "INSERT" || type == "insert")
 	{
 		string tableName = "";//
 		vector<Data> datas;
+		vector<ColumnTitle> titles;
 		vector<string> allwords = split(t, " values ");
 		/*for (int i = 0; i < allwords.size(); i++)
 		cout << allwords.at(i) << endl;*/
 		vector<string> firstPart = split(allwords.at(0), " ");
+
+
+		if (firstPart.size() == 4)//to support title input
+		{
+			vector<string> stringTitle = split(firstPart.at(3), ",", " ", "(", ")");
+			for (int j = 0; j < stringTitle.size(); j++)
+			{
+				titles.push_back(ColumnTitle(stringTitle.at(j), (DataType)0));
+			}
+
+			cout << "columnname" << endl;
+			for (int i = 0; i < titles.size(); i++)
+			{
+				cout << titles.at(i).column_name << endl;
+			}
+		}
+
 		tableName = firstPart.at(2);//third word is the table name
 		cout << tableName << endl;
 		//cout << tableName << endl;
 
 		vector<string> stringDatas = split(allwords.at(1), ",", "'", "(", ")");
-		
+
 
 		for (int i = 0; i < stringDatas.size(); i++)
 		{
@@ -375,7 +405,7 @@ Operation *parser(string t)
 			cout << datas.at(i).data << "///" << endl;
 		}
 
-		op = new InsertOperation(tableName,datas);//todo
+		op = new InsertOperation(tableName,titles,datas);//todo
 	}
 	else if (type == "DELETE" || type == "delete")
 	{

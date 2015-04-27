@@ -2,6 +2,8 @@
 struct TableInfo{
 	vector<ColumnTitle> Columns;
 	string Tablename;
+	TableInfo(){}
+	TableInfo(vector<ColumnTitle> Columns, string Tablename) :Columns(Columns), Tablename(Tablename){}
 };
 class TableManagement
 {
@@ -14,4 +16,5 @@ public:
 	vector<TableInfo> getTablebyColumn(string Columnname);
 	vector<string> getColumnbyTable(string TableName);
 	int addTable(TableInfo);
+	DataType getDataType(string TableName, string ColumnName);
 };

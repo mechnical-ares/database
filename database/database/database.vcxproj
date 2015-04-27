@@ -79,6 +79,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BPlusTree.h" />
     <ClInclude Include="ColumnTitle.h" />
     <ClInclude Include="Condition.h" />
     <ClInclude Include="CreateOperation.h" />
@@ -90,10 +91,12 @@
     <ClInclude Include="QueryOperation.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="TableManagement.h" />
     <ClInclude Include="TableColumn.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BPlusTree.cpp" />
     <ClCompile Include="CreateOperation.cpp" />
     <ClCompile Include="database.cpp" />
     <ClCompile Include="DeleteOperation.cpp" />
@@ -106,6 +109,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Table.cpp" />
+    <ClCompile Include="TableManagement.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
