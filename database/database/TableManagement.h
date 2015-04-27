@@ -14,4 +14,5 @@ public:
 	vector<TableInfo> getTablebyColumn(string Columnname);
 	vector<string> getColumnbyTable(string TableName);
 	int addTable(TableInfo);
+	DataType getDataType(string TableName, string ColumnName);
 };

@@ -81,7 +81,6 @@ vector<string> split(string str, string pattern, string pattern2)//去掉括号函数c
 	}
 	return result;
 }
-
 vector<string> split(string str, string pattern, string pattern2, string pattern3, string pattern4)//去掉括号函数insert时使用
 {
 	std::string::size_type pos;
@@ -111,7 +110,6 @@ vector<string> split(string str, string pattern, string pattern2, string pattern
 	}
 	return result;
 }
-
 TableColumn TransTandC(string t)//转换 string里面t.c为具体表列，select时使用
 {
 	TableColumn temp;
@@ -144,7 +142,6 @@ TableColumn TransTandC(string t)//转换 string里面t.c为具体表列，select时使用
 		}
 	}
 }
-
 ColumnTitle TransCandT(string t)//转换 string里面a string为具体表的属性，create时使用
 {
 	ColumnTitle temp;
@@ -222,26 +219,31 @@ Condition Transcond(string t){
 						}
 	}
 fuzhi:	
-	if(isNotConst(cond.at(0)))
+	if ((temp.isRightConst= !isNotConst(cond.at(0))) || (temp.isRightConst = !isNotConst(cond.at(1))))
 	{
+		if (!temp.isLeftConst&&!temp.isRightConst)
+		{
 		temp.left = TransTandC(cond.at(0));
+			temp.right = TransTandC(cond.at(1));
 	}
 	else{
-		ld = Data(DB_CONST, cond.at(0));
+			if (temp.isRightConst){
+				temp.left = TransTandC(cond.at(0));
+				rd = Data(TableManager.getDataType(temp.left.tableName,temp.left.colunmName), cond.at(1));
+				temp.isRightConst = TRUE;
+				temp.rightData = rd;
+			}
+			else{
+				temp.right = TransTandC(cond.at(1));
+				ld = Data(TableManager.getDataType(temp.right.tableName, temp.right.colunmName), cond.at(0));
 		temp.isLeftConst = TRUE;
 		temp.leftData = ld;
 	}
-	if (isNotConst(cond.at(1)))
-	{
-		temp.right = TransTandC(cond.at(1));
+		}	
 	}
 	else{
-		rd = Data(DB_CONST, cond.at(1));
-		temp.isRightConst = TRUE;
-		temp.rightData = rd;
+		throw  "Condition Not Valid";
 	}
-	if (temp.isLeftConst&&temp.isRightConst)
-		throw  "Condition Not Valid" ;
 	return temp;
 }
 bool issubQuery(string str)
@@ -261,7 +263,7 @@ bool iscolandtab(string str)
 
 Operation *parser(string t)
 {
-	if (issubQuery(t)){//如有括号包裹，去掉括号
+	if (issubQuery(t)){//如最外层有括号包裹，去掉括号
 		t = t.substr(1, t.length() - 2);
 	}
 	string type = t.substr(0, 6);//操作类型
@@ -386,7 +388,7 @@ Operation *parser(string t)
 		//cout << tableName << endl;
 
 		vector<string> stringDatas = split(allwords.at(1), ",", "'", "(", ")");
-
+		
 
 		for (int i = 0; i < stringDatas.size(); i++)
 		{
