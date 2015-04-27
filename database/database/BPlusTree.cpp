@@ -55,8 +55,10 @@ string char2string(char s[], int l, int r){
 }
 
 Node::Node(NodeType _type) :type(_type){}
-
-
+Node::~Node(){}
+InteriorNode::~InteriorNode(){}
+LeafNode::~LeafNode(){}
+BPlusTree::~BPlusTree(){}
 InteriorNode::InteriorNode() : Node(INTERIOR){}
 InteriorNode::InteriorNode(char s[], NodeType _type) : Node(_type){
 	keys.clear(); pointers.clear();
@@ -89,7 +91,7 @@ LeafNode::LeafNode(char s[512]) : Node(LEAF){
 }
 
 
-void BPlusTree::insert_into_tree(Page page, Key& newkey, Value& val, KeyFunc cmp){	
+void BPlusTree::insert_into_tree(Key& newkey, Value& val, KeyFunc cmp){	
 	Target leaf = search(root, newkey, cmp);
 	InCons con = insert_into_leaf(leaf.first, newkey, val, cmp);
 	while (con.page != 0){
@@ -186,6 +188,7 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, KeyFu
 		break;
 
 		default:
+			return InCons();
 			break;
 		}
 	}
@@ -244,9 +247,9 @@ page 0, char[512]:
 400~409:primaryKey
 0~199:keys + types (19+1)*10
 */
-BPlusTree::BPlusTree(string name, Table* t = NULL) :disk(name){
+BPlusTree::BPlusTree(string name, Table* t) :disk(name){
 	char s[512];
-	disk.readBlock(0, s);
+	disk.readBlock(root, s);
 	if (t != NULL){
 		t->tableName = name;
 		t->title.clear();
@@ -296,6 +299,27 @@ Target BPlusTree::search(Page page, Key& key, KeyFunc cmp){
 		break;
 	}
 	return make_pair(0, NUL);
+}
+
+Node createNode(char s[512]){
+	NodeType type = NodeType((int)s[511]);
+	switch (type){
+	case ROOT: //root
+		return InteriorNode(s, ROOT);
+		break;
+
+	case INTERIOR: //interior
+		return InteriorNode(s);
+		break;
+
+	case LEAF:
+		return LeafNode(s);
+		break;
+
+	default:
+		return Node();
+		break;
+	}
 }
 
 //typedef vector<string> row;

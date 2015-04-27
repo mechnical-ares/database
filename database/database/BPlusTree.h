@@ -121,26 +121,7 @@ p.after(ki) = p.pointers[i+1]
 */
 
 
-Node createNode(char s[512]){
-	NodeType type = NodeType((int)s[511]);
-	switch (type){
-	case ROOT: //root
-		return InteriorNode(s, ROOT);
-		break;
-
-	case INTERIOR: //interior
-		return InteriorNode(s);
-		break;
-
-	case LEAF:
-		return LeafNode(s);
-		break;
-
-	default:
-		return Node();
-		break;
-	}
-}
+Node createNode(char s[512]);
 
 
 
@@ -151,11 +132,12 @@ private:
 	Disk disk;
 	Page nextApply;
 public:
-	BPlusTree(string, Table*);
+	BPlusTree(string name, Table* t = NULL);
 	~BPlusTree();
 	void initTree(vector<ColumnTitle> &title, ColumnTitle primaryKey);
 	Target search(Page node, Key& key, KeyFunc cmp);
-	void insert_into_tree(Page node, Key& newkey, Value& val, KeyFunc cmp);
+
+	void insert_into_tree(Key& newkey, Value& val, KeyFunc cmp);
 	InCons insert_into_leaf(Page page, Key& newkey, Value& val, KeyFunc cmp);
 	InCons insert_into_interior(Page page, Key& newkey, Page child, KeyFunc cmp, bool left=false);
 

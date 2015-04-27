@@ -91,20 +91,6 @@ string cleanStr(string s){
 //	}
 //}
 
-KeyFunc buildKeyfunc(DataType type){
-	auto fn =  [&](string l, string r)->int {
-		if (l == r)
-			return 0;
-		Data ld{ type, l };
-		Data rd{ type, r };
-		if (isLT(ld, rd))
-			return 1;
-		else
-			return -1;
-	};
-	return fn;
-}
-
 Table::Table(string tableName, const vector<Condition>& conditions){
 	BPlusTree tree(tableName,this);
 	Condition leftCond, rightCond;
@@ -122,21 +108,21 @@ Table::Table(string tableName, const vector<Condition>& conditions){
 		}
 	}
 
-	KeyFunc cmp = buildKeyfunc(this->primaryKey.datatype);
+	
 	if (leftCond.op == NULL){
 		if (rightCond.op == NULL){
 			data = tree.getAll();
 		}
 		else{
-			data = tree.getLessThan(rightCond.rightData.data, cmp);
+			data = tree.getLessThan(rightCond.rightData.data);
 		}
 	}
 	else{
 		if (rightCond.op == NULL){
-			data = tree.getBiggerThan(leftCond.rightData.data, cmp);
+			data = tree.getBiggerThan(leftCond.rightData.data);
 		}
 		else{
-			data = tree.getRange(leftCond.rightData.data, rightCond.rightData.data, cmp);
+			data = tree.getRange(leftCond.rightData.data, rightCond.rightData.data);
 		}
 	}
 
