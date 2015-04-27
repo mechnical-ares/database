@@ -353,7 +353,10 @@ Operation *parser(string t)
 
 			//cout << "primary key:" << primaryKey;
 
+
 			op = new CreateOperation(tableName, CTs, primaryKey);
+			TableInfo newtableinfo(CTs, tableName);
+			TableManager.addTable(newtableinfo);
 		}
 	else if (type == "INSERT" || type == "insert")
 	{
