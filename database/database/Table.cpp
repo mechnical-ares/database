@@ -136,3 +136,16 @@ Table::Table(string tableName, const vector<Condition>& conditions){
 	}
 
 }
+void Table::showTable(){
+	for (const auto& title : title){
+		cout << setw(8) << title.column_name << "|";
+	}
+	cout << endl;
+
+	for (const auto& row : data){
+		for (const auto& data : row){
+			cout << setw(8) << data << "|";
+		}
+		cout << endl;
+	}
+}

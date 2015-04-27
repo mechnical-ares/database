@@ -417,18 +417,13 @@ Operation *parser(string t)
 					throw "error column " + stringTitle.at(j) + "not exist";
 			}
 
-
-			op = new InsertOperation(tableName, titles, datas);
 			/*cout << "columnname" << endl;
 			for (int i = 0; i < titles.size(); i++)
 			{
 				cout << titles.at(i).column_name << endl;
 			}*/
 		}
-		else
-		{
-			op = new InsertOperation(tableName, datas);
-		}
+
 		
 		//cout << tableName << endl;
 		//cout << tableName << endl;
@@ -441,7 +436,7 @@ Operation *parser(string t)
 			cout << datas.at(i).data << "///" << endl;
 		}*/
 
-		//todo
+		op = new InsertOperation(tableName,titles,datas);//todo
 	}
 	else if (type == "DELETE" || type == "delete")
 	{
@@ -460,22 +455,11 @@ int main()
 		getline(cin, input);
 		try{
 			Operation* operation = parser(input);
-			const Table& result = operation->exec();
+			Table& result = operation->exec();
 			cout << "success! " << result.data.size() << " rows affected\n";
 			cout << "--------" << result.tableName <<"------------"<< endl;
 
-			for (const auto& title : result.title){
-				cout << setw(8) << title.column_name<< "|";
-			}
-			cout << endl;
-
-			for (const auto& row : result.data){
-				for (const auto& data : row){
-					cout << setw(8) << data << "|";
-				}
-				cout << endl;
-
-			}
+			result.showTable();
 
 			delete operation;
 		}
