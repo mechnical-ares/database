@@ -303,7 +303,7 @@ Operation *parser(string t)
 				else{
 					throw  "Table" + table.at(i) + " Not Found" ;
 				}
-			}
+		}
 		}
 		count++;
 		if (allwords.size()>count){
@@ -347,16 +347,35 @@ Operation *parser(string t)
 			string primaryKey = split(columnAndType.at(columnAndType.size() - 1), "(", ")").at(1);
 
 			//cout << "primary key:" << primaryKey;
+
 			op = new CreateOperation(tableName, CTs, primaryKey);
 		}
 	else if (type == "INSERT" || type == "insert")
 	{
 		string tableName = "";//
 		vector<Data> datas;
+		vector<ColumnTitle> titles;
 		vector<string> allwords = split(t, " values ");
 		/*for (int i = 0; i < allwords.size(); i++)
 		cout << allwords.at(i) << endl;*/
 		vector<string> firstPart = split(allwords.at(0), " ");
+
+
+		if (firstPart.size() == 4)//to support title input
+		{
+			vector<string> stringTitle = split(firstPart.at(3), ",", " ", "(", ")");
+			for (int j = 0; j < stringTitle.size(); j++)
+			{
+				titles.push_back(ColumnTitle(stringTitle.at(j), (DataType)0));
+			}
+
+			cout << "columnname" << endl;
+			for (int i = 0; i < titles.size(); i++)
+			{
+				cout << titles.at(i).column_name << endl;
+			}
+		}
+
 		tableName = firstPart.at(2);//third word is the table name
 		cout << tableName << endl;
 		//cout << tableName << endl;
@@ -376,7 +395,7 @@ Operation *parser(string t)
 			cout << datas.at(i).data << "///" << endl;
 		}
 
-		op = new InsertOperation(tableName,datas);//todo
+		op = new InsertOperation(tableName,titles,datas);//todo
 	}
 	else if (type == "DELETE" || type == "delete")
 	{

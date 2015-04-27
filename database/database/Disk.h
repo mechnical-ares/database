@@ -9,9 +9,9 @@ enum Error{
 class Disk{
 public:
 	Disk(const string& name);
-	int readBlock(const int id,  char * data);
-	int writeBlock(const int id, char* data);
-	int clearBlock(const int id, const char data = 0);
+	int readBlock(const size_t id,  char * data);
+	int writeBlock(const size_t id, char* data);
+	int clearBlock(const size_t id, const char data = 0);
 	static const int BLOCK_SIZE;
 	~Disk();
 
