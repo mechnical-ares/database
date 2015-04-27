@@ -79,6 +79,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BPlusTree.h" />
     <ClInclude Include="CreateOperation.h" />
     <ClInclude Include="DeleteOperation.h" />
     <ClInclude Include="Disk.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BPlusTree.cpp" />
     <ClCompile Include="CreateOperation.cpp" />
     <ClCompile Include="database.cpp" />
     <ClCompile Include="DeleteOperation.cpp" />

@@ -9,6 +9,7 @@ char Char2Inner(char c1, char c2, int &i){
 		case ',': return ',';
 		case '\\': return '\\';
 		case '0': return '\0';
+		default: return c2;
 		}
 	}
 	else{
