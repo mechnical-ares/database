@@ -62,3 +62,17 @@ vector<string> TableManagement::getColumnbyTable(string TableName){
 		}
 	}
 }
+DataType TableManagement::getDataType(string TableName, string ColumnName){
+	DataType t;
+	for (int i = 0; i < TableInfomation.size(); i++)
+	{
+		if (TableInfomation.at(i).Tablename == TableName)
+		{
+			for (int j = 0; j < TableInfomation.at(i).Columns.size(); j++)
+				if (TableInfomation.at(i).Columns.at(j).column_name == ColumnName){
+					t = TableInfomation.at(i).Columns.at(j).datatype;
+					return t;
+				}
+		}
+	}
+}
