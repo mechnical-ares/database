@@ -98,9 +98,9 @@ KeyFunc buildKeyfunc(DataType type){
 		Data ld{ type, l };
 		Data rd{ type, r };
 		if (isLT(ld, rd))
-			return 1;
-		else
 			return -1;
+		else
+			return 1;
 	};
 	return fn;
 }
