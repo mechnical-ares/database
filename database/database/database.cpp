@@ -1,6 +1,6 @@
 #include "stdafx.h"
 using namespace std;
-
+TableManagement TableManager;
 //×Ö·û´®·Ö¸îº¯Êı
 vector<string> split(string str, string pattern)
 {
@@ -22,7 +22,42 @@ vector<string> split(string str, string pattern)
 	}
 	return result;
 }
+vector<string> splitnotbracket(string str, string pattern)//¶Ôsplitº¯Êı×ö³öĞŞ¸Ä£¬Ê¹µÃ²»»á·Ö¸î()ÖĞµÄÄÚÈİ
+{
+	std::string::size_type pos;
+	std::string::size_type bracketl;
+	std::string::size_type bracketr;
+	std::vector<std::string> result;
+	str += pattern;//À©Õ¹×Ö·û´®ÒÔ·½±ã²Ù×÷
+	int size = str.size();
 
+	for (int i = 0; i<size; i++)
+	{
+		if (str.at(i) != '(')
+		{
+			pos = str.find(pattern, i);
+			if (pos < size)
+			{
+				std::string s = str.substr(i, pos - i);
+				if (pos - i != 0)
+					result.push_back(s);
+				i = pos + pattern.size() - 1;
+			}
+		}
+		else
+		{
+			pos = str.find(")", i);
+			if (pos < size)
+			{
+				std::string s = str.substr(i, pos - i + 1);
+				if (pos - i != 0)
+					result.push_back(s);
+				i = pos + pattern.size() - 1;
+			}
+		}
+	}
+	return result;
+}
 vector<string> split(string str, string pattern, string pattern2)//È¥µôÀ¨ºÅº¯ÊıcreatÊ±Ê¹ÓÃ
 {
 	std::string::size_type pos;
@@ -46,19 +81,67 @@ vector<string> split(string str, string pattern, string pattern2)//È¥µôÀ¨ºÅº¯Êıc
 	}
 	return result;
 }
+
+vector<string> split(string str, string pattern, string pattern2, string pattern3, string pattern4)//È¥µôÀ¨ºÅº¯ÊıinsertÊ±Ê¹ÓÃ
+{
+	std::string::size_type pos;
+	std::string::size_type minpos;
+	std::vector<std::string> result;
+	str += " ";//À©Õ¹×Ö·û´®ÒÔ·½±ã²Ù×÷
+	int size = str.size();
+
+	for (int i = 0; i<size; i++)
+	{
+		minpos = str.find(pattern, i);
+		pos = str.find(pattern2, i);
+		minpos = (minpos < pos ? minpos : pos);
+		pos = str.find(pattern3, i);
+		minpos = (minpos < pos ? minpos : pos);
+		pos = str.find(pattern4, i);
+
+		pos = (minpos < pos ? minpos : pos);
+
+		if (pos<size)
+		{
+			std::string s = str.substr(i, pos - i);
+			if (pos - i != 0)
+				result.push_back(s);
+			i = pos + pattern.size() - 1;
+		}
+	}
+	return result;
+}
+
 TableColumn TransTandC(string t)//×ª»» stringÀïÃæt.cÎª¾ßÌå±íÁĞ£¬selectÊ±Ê¹ÓÃ
 {
 	TableColumn temp;
 	vector<string> tandc = split(t, ".");
 	if (tandc.size() == 2)
 	{
+		if (TableManager.hasColumn(tandc.at(0), tandc.at(1))){
 		temp.tableName = tandc.at(0);
 		temp.colunmName = tandc.at(1);
 		return temp;
 	}
 	else{
-		cerr << "Illegal Input ColumnandTable" << endl;
-		abort();
+			throw  "Column " + tandc.at(1) + "Not Found In Table " + tandc.at(0);
+	}
+}
+	else{
+		if (TableManager.getTablebyColumn(t).size() == 1)
+		{
+			temp.tableName = TableManager.getTablebyColumn(t).at(0).Tablename;
+			temp.colunmName = t;
+			return temp;
+		}
+		else if (TableManager.getTablebyColumn(t).size() == 0){
+			throw  "Column " + t + " Not Found" ;
+
+		}
+		else{
+			throw  "Column " + t + " Found In Many Tables" ;
+			
+		}
 	}
 }
 
@@ -81,14 +164,14 @@ ColumnTitle TransCandT(string t)//×ª»» stringÀïÃæa stringÎª¾ßÌå±íµÄÊôĞÔ£¬createÊ
 			temp.datatype = (DataType)4;
 		else
 		{
-			cerr << "Illegal Data Type" << endl;
-			abort();
+			throw "Illegal Data Type" ;
+			
 		}
 		return temp;
 	}
 	else{
-		cerr << "Illegal Input ColumnandTable" << endl;
-		abort();
+		throw "Illegal Input ColumnandTable" ;
+		
 	}
 }
 bool isNotConst(string t){//ÅĞ¶ÏÔËËã·ûÁ½²àµÄ×Ö·û´®ÊÇ³£Á¿·ñ
@@ -139,7 +222,7 @@ Condition Transcond(string t){
 						}
 	}
 fuzhi:	
-	if (isNotConst(cond.at(0)))
+	if(isNotConst(cond.at(0)))
 	{
 		temp.left = TransTandC(cond.at(0));
 	}
@@ -157,6 +240,8 @@ fuzhi:
 		temp.isRightConst = TRUE;
 		temp.rightData = rd;
 	}
+	if (temp.isLeftConst&&temp.isRightConst)
+		throw  "Condition Not Valid" ;
 	return temp;
 }
 bool issubQuery(string str)
@@ -173,7 +258,6 @@ bool iscolandtab(string str)
 	else
 		return false;
 }
-Table findtables(string tablename);
 
 Operation *parser(string t)
 {
@@ -186,47 +270,58 @@ Operation *parser(string t)
 
 	if (type == "SELECT" || type == "select")//ÅĞ¶ÏÀàĞÍ
 	{
-		vector<string> allwords = split(t, " ");//°´ÕÕ¿Õ¸ñÏÈ·Ö´Ê
+		vector<string> allwords = splitnotbracket(t, " ");//°´ÕÕ¿Õ¸ñÏÈ·Ö´Ê,Èç¹ûÊÇÀ¨ºÅ°ü¹üµÄ£¬ÏÈ²»·Ö
+		vector<TableColumn> TC;
+		bool selectallcolumns=false;
 		count++;
 		vector<string> columnandtable = split(allwords.at(count), ",");
-		count++;
-		vector<TableColumn> TC;
-
+		if (allwords.at(count) == "*"){
+			selectallcolumns = true;
+		}
+		else{
 		for (int i = 0; i < columnandtable.size(); i++){//³éÈ¡±í-ÁĞ¶ÔÓ¦¹ØÏµ
 			TC.push_back(TransTandC(columnandtable.at(i)));
 		}
+		}
+		count++;
 		if (allwords.at(count) != "from"&&allwords.at(count) != "FROM"){
-			cerr << "Illegal Input";
+			throw  "KeyWord \"From\" Not Found";
 		}
 		count++;
 		vector<string> table = split(allwords.at(count), ",");//»ñÈ¡±íÃû
-		/*		vector<Table> tables;
-		for (int i = 0; i<tabledef.size(); i++)//°Ñ±í×¼±¸ºÃ
-		{
-		if (issubQuery(tabledef.at(i)))
-		{
-		Operation *subquery = parser(tabledef.at(i));
-		tables.push_back(subquery.exec());
-		continue;
+		if (selectallcolumns){//Èç¹ûÊÇselect * £¬Ôò½«ËùÓĞ±íÖĞµÄËùÓĞÁĞ·Å½øTCÖĞ
+			for (int i = 0; i < table.size(); i++){
+				TableColumn temp;
+				if (TableManager.hasTable(table.at(i))){
+					temp.tableName = table.at(i);
+					vector<string> Column = TableManager.getColumnbyTable(temp.tableName);
+					for (int j = 0; j < Column.size(); j++){
+						temp.colunmName = Column.at(j);
+						TC.push_back(temp);
+					}
+				}
+				else{
+					throw  "Table" + table.at(i) + " Not Found" ;
+				}
 		}
-		tables.push_back(findtables(tabledef.at(i)));
 		}
-		*/
 		count++;
+		if (allwords.size()>count){
 		if (allwords.at(count) != "where"&&allwords.at(count) != "WHERE"){
-			cerr << "Illegal Input";
-			abort();
+				throw  "Keyword Where Not Found";
 		}
 		count++;
+		}
 		vector<string> equations = split(allwords.at(count), ",");//Ìõ¼şÓÃ,·Ö´Ê
 		vector<Condition> conds;
 		for (int i = 0; i < equations.size(); i++)
 		{
+
 			conds.push_back(Transcond(equations.at(i)));
 		} 
 		op = new QueryOperation(TC, table, conds);
 	}
-	else if (type == "CREATE" || type == "create")//creat table by TZH//·Ö´ÊÊ±×¢ÒâÀàĞÍ±íÃûºóÃæ±ØĞë½Ó ¿Õ¸ñ£»Ö÷¼ü²»ÄÜ½Ó¿Õ¸ñ£¬±ØĞëÖ±½Ó½ÓÀ¨ºÅ
+	else if(type == "CREATE" || type == "create")//creat table by TZH//·Ö´ÊÊ±×¢ÒâÀàĞÍ±íÃûºóÃæ±ØĞë½Ó ¿Õ¸ñ£»Ö÷¼ü²»ÄÜ½Ó¿Õ¸ñ£¬±ØĞëÖ±½Ó½ÓÀ¨ºÅ
 		{
 			string tableName = "";//
 			vector<string> allwords = split(t, " (", ") ");
@@ -235,6 +330,11 @@ Operation *parser(string t)
 			vector<string> firstPart = split(allwords.at(0), " ");
 			tableName = firstPart.at(2);//third word is the table name
 			//cout << tableName << endl;
+
+			if (TableManager.hasTable(tableName))
+			{
+				throw "Table already exist!";
+			}
 
 			vector<string> columnAndType = split(allwords.at(1), ",");
 			vector<ColumnTitle> CTs;
@@ -247,17 +347,60 @@ Operation *parser(string t)
 
 			string keyCmp = split(columnAndType.at(columnAndType.size() - 1), "(", ")").at(0);
 			if ("primary key" != keyCmp && keyCmp != "PRIMARY KEY"){
-				cerr << "Illegal input,need primary key";
-				abort();
+				throw  "Illegal input,need primary key";
 			}
 			string primaryKey = split(columnAndType.at(columnAndType.size() - 1), "(", ")").at(1);
 
 			//cout << "primary key:" << primaryKey;
+
 			op = new CreateOperation(tableName, CTs, primaryKey);
 		}
 	else if (type == "INSERT" || type == "insert")
 	{
+		string tableName = "";//
+		vector<Data> datas;
+		vector<ColumnTitle> titles;
+		vector<string> allwords = split(t, " values ");
+		/*for (int i = 0; i < allwords.size(); i++)
+		cout << allwords.at(i) << endl;*/
+		vector<string> firstPart = split(allwords.at(0), " ");
 
+
+		if (firstPart.size() == 4)//to support title input
+		{
+			vector<string> stringTitle = split(firstPart.at(3), ",", " ", "(", ")");
+			for (int j = 0; j < stringTitle.size(); j++)
+			{
+				titles.push_back(ColumnTitle(stringTitle.at(j), (DataType)0));
+			}
+
+			cout << "columnname" << endl;
+			for (int i = 0; i < titles.size(); i++)
+			{
+				cout << titles.at(i).column_name << endl;
+			}
+		}
+
+		tableName = firstPart.at(2);//third word is the table name
+		cout << tableName << endl;
+		//cout << tableName << endl;
+
+		vector<string> stringDatas = split(allwords.at(1), ",", "'", "(", ")");
+
+
+		for (int i = 0; i < stringDatas.size(); i++)
+		{
+			datas.push_back(Data((DataType)0, stringDatas.at(i)));
+			//cout << columnAndType.at(i) << endl;
+		}
+
+		cout << "data test" << endl;
+		for (int i = 0; i < datas.size(); i++)
+		{
+			cout << datas.at(i).data << "///" << endl;
+		}
+
+		op = new InsertOperation(tableName,titles,datas);//todo
 	}
 	else if (type == "DELETE" || type == "delete")
 	{

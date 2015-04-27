@@ -39,13 +39,13 @@
     <ClInclude Include="Disk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InsertOPeration.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DeleteOperation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BPlusTree.h">
+    <ClInclude Include="InsertOperation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TableManagement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,13 +71,13 @@
     <ClCompile Include="Disk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InsertOPeration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DeleteOperation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BPlusTree.cpp">
+    <ClCompile Include="InsertOperation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TableManagement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

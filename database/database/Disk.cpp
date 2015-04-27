@@ -24,7 +24,7 @@ Disk::Disk(const string& name) :name(name),db_file(NULL),meta_file(NULL){
 	if (db_file == NULL)
 		db_file = fopen("db", "w+b");
 }
-int Disk::readBlock(const int id, char * data){
+int Disk::readBlock(const size_t id, char * data){
 	if (db_file == NULL)
 		return DB_FILE_ERROR;
 	if (meta_file == NULL)
@@ -40,7 +40,7 @@ int Disk::readBlock(const int id, char * data){
 	return 0;
 }
 
-int Disk::writeBlock(const int id, char * data){
+int Disk::writeBlock(const size_t id, char * data){
 	if (db_file == NULL)
 		return DB_FILE_ERROR;
 	if (meta_file == NULL)
@@ -74,7 +74,7 @@ Disk::~Disk(){
 		fclose(meta_file);
 }
 
-int Disk::clearBlock(const int id, const char data = 0){
+int Disk::clearBlock(const size_t id, const char data){
 	char buffer[BLOCK_SIZE];
 	memset(buffer, data, sizeof buffer);
 	return writeBlock(id, buffer);

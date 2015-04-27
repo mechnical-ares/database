@@ -50,7 +50,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -65,7 +65,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -79,24 +79,23 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BPlusTree.h" />
     <ClInclude Include="CreateOperation.h" />
     <ClInclude Include="DeleteOperation.h" />
     <ClInclude Include="Disk.h" />
-    <ClInclude Include="InsertOPeration.h" />
+    <ClInclude Include="InsertOperation.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="QueryOperation.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="TableManagement.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BPlusTree.cpp" />
     <ClCompile Include="CreateOperation.cpp" />
     <ClCompile Include="database.cpp" />
     <ClCompile Include="DeleteOperation.cpp" />
     <ClCompile Include="Disk.cpp" />
-    <ClCompile Include="InsertOPeration.cpp" />
+    <ClCompile Include="InsertOperation.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="QueryOperation.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -104,6 +103,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Table.cpp" />
+    <ClCompile Include="TableManagement.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
