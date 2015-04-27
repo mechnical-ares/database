@@ -93,9 +93,14 @@ string cleanStr(string s){
 
 KeyFunc buildKeyfunc(DataType type){
 	auto fn =  [&](string l, string r)->int {
+		if (l == r)
+			return 0;
 		Data ld{ type, l };
 		Data rd{ type, r };
-		return isLT(ld, rd);
+		if (isLT(ld, rd))
+			return 1;
+		else
+			return -1;
 	};
 	return fn;
 }
@@ -135,4 +140,17 @@ Table::Table(string tableName, const vector<Condition>& conditions){
 		}
 	}
 
+}
+void Table::showTable(){
+	for (const auto& title : title){
+		cout << setw(8) << title.column_name << "|";
+	}
+	cout << endl;
+
+	for (const auto& row : data){
+		for (const auto& data : row){
+			cout << setw(8) << data << "|";
+		}
+		cout << endl;
+	}
 }
