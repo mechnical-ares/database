@@ -1,6 +1,7 @@
 #include "stdafx.h"
 using namespace std;
 TableManagement TableManager;
+stringstream ss;
 //×Ö·û´®·Ö¸îº¯Êý
 vector<string> split(string str, string pattern)
 {
@@ -275,7 +276,10 @@ Operation *parser(string t)
 		for (int i = 0; i < allwords.size(); i++){
 			if (issubQuery(allwords.at(i)))
 			{
-
+				Table result=parser(allwords.at(i))->exec();
+				ss << TableManager.TableNum;
+				ss >> result.tableName;
+				allwords.at(i) = result.tableName;
 			}
 		}
 		vector<TableColumn> TC;
@@ -362,6 +366,8 @@ Operation *parser(string t)
 
 
 			op = new CreateOperation(tableName, CTs, primaryKey);
+
+			//to manage the table list
 			TableInfo newtableinfo(CTs, tableName);
 			TableManager.addTable(newtableinfo);
 		}
@@ -374,29 +380,14 @@ Operation *parser(string t)
 		/*for (int i = 0; i < allwords.size(); i++)
 		cout << allwords.at(i) << endl;*/
 		vector<string> firstPart = split(allwords.at(0), " ");
+		tableName = firstPart.at(2);//third word is the table name
 
-
-		if (firstPart.size() == 4)//to support title input
+		if (!TableManager.hasTable(tableName))
 		{
-			vector<string> stringTitle = split(firstPart.at(3), ",", " ", "(", ")");
-			for (int j = 0; j < stringTitle.size(); j++)
-			{
-				titles.push_back(ColumnTitle(stringTitle.at(j), (DataType)0));
-			}
-
-			cout << "columnname" << endl;
-			for (int i = 0; i < titles.size(); i++)
-			{
-				cout << titles.at(i).column_name << endl;
-			}
+			throw "Table "+tableName+"is not exist!";
 		}
 
-		tableName = firstPart.at(2);//third word is the table name
-		cout << tableName << endl;
-		//cout << tableName << endl;
-
 		vector<string> stringDatas = split(allwords.at(1), ",", "'", "(", ")");
-		
 
 		for (int i = 0; i < stringDatas.size(); i++)
 		{
@@ -404,11 +395,46 @@ Operation *parser(string t)
 			//cout << columnAndType.at(i) << endl;
 		}
 
-		cout << "data test" << endl;
+		if (firstPart.size() == 4)//to support title input
+		{
+			vector<string> stringTitle = split(firstPart.at(3), ",", " ", "(", ")");
+			if (stringTitle.size() != stringDatas.size())
+				throw "numbers of column is not equal to numbers of data";
+			vector<string> realTitle=TableManager.getColumnbyTable(tableName);
+			int size = realTitle.size();
+			for (int j = 0; j < stringTitle.size(); j++)
+			{
+				bool flag = false;
+				for (int i = 0; i < size; i++)
+				{
+					if (realTitle.at(i) == stringTitle.at(j))
+					{
+				titles.push_back(ColumnTitle(stringTitle.at(j), (DataType)0));
+						flag = true;
+					}					
+				}
+				if (flag)
+					throw "error column " + stringTitle.at(j) + "not exist";
+			}
+
+			/*cout << "columnname" << endl;
+			for (int i = 0; i < titles.size(); i++)
+			{
+				cout << titles.at(i).column_name << endl;
+			}*/
+		}
+
+		
+		//cout << tableName << endl;
+		//cout << tableName << endl;
+
+
+
+		/*cout << "data test" << endl;
 		for (int i = 0; i < datas.size(); i++)
 		{
 			cout << datas.at(i).data << "///" << endl;
-		}
+		}*/
 
 		op = new InsertOperation(tableName,titles,datas);//todo
 	}
