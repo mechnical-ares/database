@@ -186,6 +186,7 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, KeyFu
 		break;
 
 		default:
+			return InCons();
 			break;
 		}
 	}
@@ -296,6 +297,27 @@ Target BPlusTree::search(Page page, Key& key, KeyFunc cmp){
 		break;
 	}
 	return make_pair(0, NUL);
+}
+
+Node createNode(char s[512]){
+	NodeType type = NodeType((int)s[511]);
+	switch (type){
+	case ROOT: //root
+		return InteriorNode(s, ROOT);
+		break;
+
+	case INTERIOR: //interior
+		return InteriorNode(s);
+		break;
+
+	case LEAF:
+		return LeafNode(s);
+		break;
+
+	default:
+		return Node();
+		break;
+	}
 }
 
 //typedef vector<string> row;

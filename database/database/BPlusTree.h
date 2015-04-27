@@ -121,26 +121,7 @@ p.after(ki) = p.pointers[i+1]
 */
 
 
-Node createNode(char s[512]){
-	NodeType type = NodeType((int)s[511]);
-	switch (type){
-	case ROOT: //root
-		return InteriorNode(s, ROOT);
-		break;
-
-	case INTERIOR: //interior
-		return InteriorNode(s);
-		break;
-
-	case LEAF:
-		return LeafNode(s);
-		break;
-
-	default:
-		return Node();
-		break;
-	}
-}
+Node createNode(char s[512]);
 
 
 
