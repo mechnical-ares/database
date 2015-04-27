@@ -1,6 +1,59 @@
 #include "stdafx.h"
 #include "BPlusTree.h"
 #include "Disk.h"
+
+int char2int(char s[], int l, int r, int base){
+	int ret = 0;
+	switch (base){
+	case 10:
+		if (l > r) return 0;
+		for (int i = l; i <= r; i++) if (s[i] != 0){
+			ret = ret*base + (s[i] - '0');
+		}
+		break;
+	case 128:
+	{
+		while (s[l] == 0 && l <= r) l++;
+		for (; l <= r; l++){
+			ret = ret * 128 + (int)s[l];
+		}
+	}
+
+	default: break;
+	}
+	return ret;
+}
+
+void int2char(char s[], int l, int r, int value, int base){
+	if (base == 0 || base > 128){
+		throw "Base error!";
+		return;
+	}
+	int i;
+	for (i = l; i <= r; i++)
+		s[i] = 0;
+	i = r;
+	while (value){
+		s[i] = value % base;
+		value /= base;
+		i--;
+		if (i < l) break;
+	}
+}
+
+void string2chars(char s[], int l, int r, string &ss){
+	for (int i = r, j = ss.length() - 1; i >= l && j >= 0; i--, j--){
+		s[i] = ss[j];
+	}
+}
+
+string char2string(char s[], int l, int r){
+	string ret = "";
+	for (int i = l; i <= r; i++) if (s[i] != 0)
+		ret.push_back(s[i]);
+	return ret;
+}
+
 Node::Node(NodeType _type) :type(_type){}
 
 
@@ -100,9 +153,9 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, KeyFu
 			p->keys.clear(); p->pointers.clear();
 			p->keys.push_back(left); p->pointers.push_back(newpage1); p->pointers.push_back(newpage2);
 
-			newinter1.Write2Disk(newpage1);
-			newinter2.Write2Disk(newpage2);
-			p->Write2Disk(root);
+			newinter1.Write2Disk(newpage1, disk);
+			newinter2.Write2Disk(newpage2, disk);
+			p->Write2Disk(root, disk);
 
 			return InCons();
 		}
@@ -125,8 +178,8 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, KeyFu
 
 			newinter.father = p->father; newinter.type = p->type;
 
-			newinter.Write2Disk(newpage);
-			p->Write2Disk(page);
+			newinter.Write2Disk(newpage, disk);
+			p->Write2Disk(page, disk);
 
 			return InCons(retKey, newpage, father);
 		}
@@ -176,8 +229,8 @@ InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val, KeyFunc c
 	newleaf.next_page = p->next_page; newleaf.prev_page = page;
 	p->next_page = newpage;
 
-	newleaf.Write2Disk(newpage);
-	p->Write2Disk(page);
+	newleaf.Write2Disk(newpage, disk);
+	p->Write2Disk(page, disk);
 
 	return InCons(newleaf.keys[0], newpage, newleaf.father);
 
@@ -243,4 +296,152 @@ Target BPlusTree::search(Page page, Key& key, KeyFunc cmp){
 		break;
 	}
 	return make_pair(0, NUL);
+}
+
+//typedef vector<string> row;
+vector<row> BPlusTree::getAll(){
+	vector<row> ret; ret.clear();
+	char s[512];
+	disk.readBlock(root,s);
+	Node node = createNode(s);
+	while (node.type != LEAF){
+		InteriorNode* p = (InteriorNode*)&node;
+		disk.readBlock(p->pointers[0],s);
+		node = createNode(s);
+	}
+	LeafNode* p = (LeafNode*)&node;
+	vector<Value>::iterator ite;
+	while (true){
+		for (ite = p->values.begin(); ite != p->values.end(); ite++)
+			ret.push_back(*ite);
+		if (p->next_page == NUL) break;
+		disk.readBlock(p->next_page, s);
+		Node node = createNode(s);
+		p = (LeafNode*)&node;
+	}
+	return ret;
+}
+
+vector<row> BPlusTree::getLessThan(Key& key, KeyFunc cmp){
+	Target t = search(root, key, cmp);
+	vector<row> ret; ret.clear();
+	char s[512];
+	disk.readBlock(root, s);
+	Node node = createNode(s);
+	while (node.type != LEAF){
+		InteriorNode* p = (InteriorNode*)&node;
+		disk.readBlock(p->pointers[0], s);
+		node = createNode(s);
+	}
+	LeafNode* p = (LeafNode*)&node;
+	vector<Value>::iterator ite = p->values.begin();
+	vector<Key>::iterator itek = p->keys.begin();
+	while (true){
+		for (ite = p->values.begin(), itek = p->keys.begin(); ite != p->values.end(); ite++, itek++){
+			if (cmp(key, *itek) >= 0) goto fin;
+			ret.push_back(*ite);
+		}
+		if (p->next_page == NUL) break;
+		disk.readBlock(p->next_page, s);
+		Node node = createNode(s);
+		p = (LeafNode*)&node;
+	}
+fin:
+	return ret;
+
+}
+
+vector<row> BPlusTree::getBiggerThan(Key& key, KeyFunc cmp){
+	Target t = search(root, key, cmp);
+	vector<row> ret; ret.clear();
+	char s[512];
+	disk.readBlock(t.first, s);
+	Node node = createNode(s);
+	LeafNode* p = (LeafNode*)&node;
+	vector<Value>::iterator ite = p->values.begin();
+	vector<Key>::iterator itek = p->keys.begin();
+	while (cmp(key, *itek) < 0) ite++, itek++;
+
+	while (true){
+		for (; ite != p->values.end(); ite++)
+			ret.push_back(*ite);
+		if (p->next_page == NUL) break;
+		disk.readBlock(p->next_page, s);
+		Node node = createNode(s);
+		p = (LeafNode*)&node;
+	}
+	return ret;
+}
+
+vector<row> BPlusTree::getRange(Key& left, Key &right, KeyFunc cmp){
+	Target t = search(root, left, cmp);
+	vector<row> ret; ret.clear();
+	char s[512];
+	disk.readBlock(t.first, s);
+	Node node = createNode(s);
+	LeafNode* p = (LeafNode*)&node;
+	vector<Value>::iterator ite = p->values.begin();
+	vector<Key>::iterator itek = p->keys.begin();
+	while (cmp(left, *itek) < 0) ite++, itek++;
+
+	while (true){
+		for (; ite != p->values.end(); ite++, itek++){
+			if (cmp(right, *itek) <= 0) goto fin;
+			ret.push_back(*ite);
+		}
+		if (p->next_page == NUL) break;
+		disk.readBlock(p->next_page, s);
+		Node node = createNode(s);
+		p = (LeafNode*)&node;
+		ite = p->values.begin(), itek = p->keys.begin();
+	}
+fin:
+	return ret;
+}
+
+
+void BPlusTree::initTree(vector<ColumnTitle> &title, ColumnTitle primaryKey){
+	char s[512];
+	memset(s, 0, sizeof s);
+	s[511] = (int)NUL;
+	s[510] = (char)title.size();
+	int2char(s, 505, 509, 0, 128);
+	string2chars(s, 400, 419, primaryKey.column_name);
+	for (int i = 0; i < title.size(); i++){
+		string2chars(s, i * 20, i * 20 + 18, title[i].column_name);
+		s[i * 20 + 19] = (char)title[i].datatype;
+	}
+}
+
+
+void LeafNode::Write2Disk(Page page, Disk &disk){
+	char s[512];
+	memset(s, 0, sizeof s);
+	s[511] = (char)this->type;
+	s[510] = (char)this->keys.size();
+	s[509] = (char)this->values[0].size();
+	int2char(s, 504, 508, this->next_page);
+	int2char(s, 499, 503, this->prev_page);
+	for (int i = 0; i < this->keys.size(); i++){
+		string2chars(s, i * 160, i * 160 + 19, this->keys[i]);
+		for (int j = 0; j < this->values[0].size(); j++){
+			string2chars(s, i * 160 + 20 + j * 20, i * 160 + 39 + j * 20,this->values[i][j]);
+		}
+	}
+	disk.writeBlock(page, s);
+}
+
+void InteriorNode::Write2Disk(Page page, Disk &disk){
+	char s[512];
+	memset(s, 0, sizeof s);
+	s[511] = (char)this->type;
+	s[510] = (char)this->keys.size();
+	int2char(s, 505, 509, this->father);
+	int i = 0,j=0, length = this->keys.size();
+	for (; i < length * 25; i += 25,j++){
+		string2chars(s, i, i + 4,this->keys[j]);
+		int2char(s, i + 5, i + 24, this->pointers[j]);
+	}
+	int2char(s, i + 5, i + 24, this->pointers[j]);
+	disk.writeBlock(page, s);
 }
