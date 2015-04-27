@@ -409,7 +409,7 @@ Operation *parser(string t)
 						flag = true;
 					}					
 				}
-				if (flag)
+				if (!flag)
 					throw "error column " + stringTitle.at(j) + "not exist";
 			}
 
