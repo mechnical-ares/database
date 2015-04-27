@@ -223,10 +223,10 @@ fuzhi:
 	{
 		if (!temp.isLeftConst&&!temp.isRightConst)
 		{
-			temp.left = TransTandC(cond.at(0));
+		temp.left = TransTandC(cond.at(0));
 			temp.right = TransTandC(cond.at(1));
-		}
-		else{
+	}
+	else{
 			if (temp.isRightConst){
 				temp.left = TransTandC(cond.at(0));
 				rd = Data(TableManager.getDataType(temp.left.tableName,temp.left.colunmName), cond.at(1));
@@ -236,9 +236,9 @@ fuzhi:
 			else{
 				temp.right = TransTandC(cond.at(1));
 				ld = Data(TableManager.getDataType(temp.right.tableName, temp.right.colunmName), cond.at(0));
-				temp.isLeftConst = TRUE;
-				temp.leftData = ld;
-			}
+		temp.isLeftConst = TRUE;
+		temp.leftData = ld;
+	}
 		}	
 	}
 	else{
@@ -332,6 +332,11 @@ Operation *parser(string t)
 			vector<string> firstPart = split(allwords.at(0), " ");
 			tableName = firstPart.at(2);//third word is the table name
 			//cout << tableName << endl;
+
+			if (TableManager.hasTable(tableName))
+			{
+				throw "Table already exist!";
+			}
 
 			vector<string> columnAndType = split(allwords.at(1), ",");
 			vector<ColumnTitle> CTs;
