@@ -394,14 +394,22 @@ Operation *parser(string t)
 			datas.push_back(Data((DataType)0, stringDatas.at(i)));
 			//cout << columnAndType.at(i) << endl;
 		}
+		Data primaryData;
+
+		vector<string> realTitle = TableManager.getColumnbyTable(tableName);
+		int size = realTitle.size();
+
+		for (int j = 0; j < size; j++)
+		{
+			if (TableManager.getPrimaryKey())//todo
+		}
 
 		if (firstPart.size() == 4)//to support title input
 		{
 			vector<string> stringTitle = split(firstPart.at(3), ",", " ", "(", ")");
 			if (stringTitle.size() != stringDatas.size())
 				throw "numbers of column is not equal to numbers of data";
-			vector<string> realTitle=TableManager.getColumnbyTable(tableName);
-			int size = realTitle.size();
+			
 			for (int j = 0; j < stringTitle.size(); j++)
 			{
 				bool flag = false;
@@ -417,6 +425,7 @@ Operation *parser(string t)
 					throw "error column " + stringTitle.at(j) + "not exist";
 			}
 
+			op = new InsertOperation(tableName, titles, datas);
 			/*cout << "columnname" << endl;
 			for (int i = 0; i < titles.size(); i++)
 			{
@@ -435,8 +444,11 @@ Operation *parser(string t)
 		{
 			cout << datas.at(i).data << "///" << endl;
 		}*/
-
-		op = new InsertOperation(tableName,titles,datas);//todo
+		else
+		{
+			op = new InsertOperation(tableName,datas);//todo
+		}
+		
 	}
 	else if (type == "DELETE" || type == "delete")
 	{
