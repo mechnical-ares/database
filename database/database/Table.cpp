@@ -93,9 +93,14 @@ Table::Table(string tableName) :tableName(cleanStr(tableName)){
 
 KeyFunc buildKeyfunc(DataType type){
 	auto fn =  [&](string l, string r)->int {
+		if (l == r)
+			return 0;
 		Data ld{ type, l };
 		Data rd{ type, r };
-		return isLT(ld, rd);
+		if (isLT(ld, rd))
+			return 1;
+		else
+			return -1;
 	};
 	return fn;
 }
