@@ -63,6 +63,7 @@ vector<string> TableManagement::getColumnbyTable(string TableName){
 			return Column;
 		}
 	}
+	throw "Table Not Found";
 }
 DataType TableManagement::getDataType(string TableName, string ColumnName){
 	DataType t;
@@ -77,4 +78,5 @@ DataType TableManagement::getDataType(string TableName, string ColumnName){
 				}
 		}
 	}
+	throw "T And C Not Found";
 }
