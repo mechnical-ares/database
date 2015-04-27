@@ -15,8 +15,7 @@ const int LeafNodeCapacity = 3;
 
 typedef pair<Page, int> Locate;
 typedef pair<Page, NodeType> Target;
-
-typedef int(*KeyFunc) (string, string);
+typedef function<int(const string&, const string&)> KeyFunc;
 typedef int(*RowFunc) (string, string);
 struct InsertConsequence
 {
