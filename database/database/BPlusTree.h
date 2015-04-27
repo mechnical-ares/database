@@ -34,7 +34,7 @@ int char2int(char s[], int l, int r, int base = 10);
 void int2char(char s[], int l, int r, int value, int base = 128);
 void string2chars(char s[], int l, int r, string &ss);
 string char2string(char s[], int l, int r);
-
+KeyFunc buildKeyfunc(DataType type);
 
 
 
@@ -131,19 +131,20 @@ class BPlusTree
 private:
 	Disk disk;
 	Page nextApply;
+	KeyFunc cmp;
 public:
 	BPlusTree(string name, Table* t = NULL);
 	~BPlusTree();
 	void initTree(vector<ColumnTitle> &title, ColumnTitle primaryKey);
-	Target search(Page node, Key& key, KeyFunc cmp);
+	Target search(Page node, Key& key);
 
-	void insert_into_tree(Key& newkey, Value& val, KeyFunc cmp);
-	InCons insert_into_leaf(Page page, Key& newkey, Value& val, KeyFunc cmp);
-	InCons insert_into_interior(Page page, Key& newkey, Page child, KeyFunc cmp, bool left=false);
+	void insert_into_tree(Key& newkey, Value& val);
+	InCons insert_into_leaf(Page page, Key& newkey, Value& val);
+	InCons insert_into_interior(Page page, Key& newkey, Page child, bool left=false);
 
 	vector<row> getAll();
-	vector<row> getLessThan(Key& key, KeyFunc cmp); // included
-	vector<row> getBiggerThan(Key& key, KeyFunc cmp); //included
-	vector<row> getRange(Key& left,Key &right , KeyFunc cmp);
+	vector<row> getLessThan(Key& key); // included
+	vector<row> getBiggerThan(Key& key); //included
+	vector<row> getRange(Key& left,Key &right );
 };
 
