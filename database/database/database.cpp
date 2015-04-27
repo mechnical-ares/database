@@ -222,7 +222,7 @@ Condition Transcond(string t){
 						}
 	}
 fuzhi:	
-	if (isNotConst(cond.at(0)))
+	if(isNotConst(cond.at(0)))
 	{
 		temp.left = TransTandC(cond.at(0));
 	}
@@ -285,7 +285,7 @@ Operation *parser(string t)
 		}
 		count++;
 		if (allwords.at(count) != "from"&&allwords.at(count) != "FROM"){
-			throw  "KeyWord \"Fro\"m Not Found";
+			throw  "KeyWord \"From\" Not Found";
 		}
 		count++;
 		vector<string> table = split(allwords.at(count), ",");//获取表名
@@ -316,6 +316,7 @@ Operation *parser(string t)
 		vector<Condition> conds;
 		for (int i = 0; i < equations.size(); i++)
 		{
+
 			conds.push_back(Transcond(equations.at(i)));
 		} 
 		op = new QueryOperation(TC, table, conds);
