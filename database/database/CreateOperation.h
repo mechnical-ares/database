@@ -7,15 +7,8 @@
 #include <fstream>
 #include "Operation.h"
 #include "Table.h"
-/*
-enum DataType{
-CONST,INT,DOUBLE,BOOL,STRING,
-};
-struct ColumnTitle{
-	string column_name;
-	DataType datatype;
-};*/
-class CreateOperation : public Operation//..
+
+class CreateOperation : public Operation
 {
 public:
 	string tableName;

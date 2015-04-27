@@ -80,7 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BPlusTree.h" />
+    <ClInclude Include="ColumnTitle.h" />
+    <ClInclude Include="Condition.h" />
     <ClInclude Include="CreateOperation.h" />
+    <ClInclude Include="Data.h" />
     <ClInclude Include="DeleteOperation.h" />
     <ClInclude Include="Disk.h" />
     <ClInclude Include="InsertOperation.h" />
@@ -89,6 +92,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="TableManagement.h" />
+    <ClInclude Include="TableColumn.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -98,7 +102,7 @@
     <ClCompile Include="DeleteOperation.cpp" />
     <ClCompile Include="Disk.cpp" />
     <ClCompile Include="InsertOperation.cpp" />
-    <ClCompile Include="Operation.cpp" />
+    <ClCompile Include="Condition.cpp" />
     <ClCompile Include="QueryOperation.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

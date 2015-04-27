@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 bool isEQ(const Data& left, const Data& right){
 	if (left.type != right.type)
 		return false;
