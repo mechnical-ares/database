@@ -236,9 +236,9 @@ fuzhi:
 			else{
 				temp.right = TransTandC(cond.at(1));
 				ld = Data(TableManager.getDataType(temp.right.tableName, temp.right.colunmName), cond.at(0));
-				temp.isLeftConst = TRUE;
-				temp.leftData = ld;
-			}
+		temp.isLeftConst = TRUE;
+		temp.leftData = ld;
+	}
 		}	
 	}
 	else{
@@ -360,7 +360,10 @@ Operation *parser(string t)
 
 			//cout << "primary key:" << primaryKey;
 
+
 			op = new CreateOperation(tableName, CTs, primaryKey);
+			TableInfo newtableinfo(CTs, tableName);
+			TableManager.addTable(newtableinfo);
 		}
 	else if (type == "INSERT" || type == "insert")
 	{

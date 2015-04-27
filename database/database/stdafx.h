@@ -16,6 +16,7 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <functional>
 // TODO: reference additional headers your program requires here
 
 
@@ -26,3 +27,5 @@
 #include "Disk.h"
 #include "InsertOperation.h"
 #include "TableManagement.h"
+#include "ColumnTitle.h"
+#include "TableColumn.h"
