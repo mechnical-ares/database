@@ -18,7 +18,7 @@ Table InsertOperation::exec(){
 	BPlusTree temBptree(tableName, NULL);
 
 	row rowValue;
-	for (int i = 0; i < data.size; i++)//change data into a row
+	for (int i = 0; i < data.size(); i++)//change data into a row
 	{
 		rowValue.push_back(data.at(i).data);
 	}
