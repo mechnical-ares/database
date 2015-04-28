@@ -401,7 +401,10 @@ Operation *parser(string t)
 
 		for (int j = 0; j < size; j++)
 		{
-			if (TableManager.getPrimaryKey())//todo
+			if (TableManager.getPrimaryKey(tableName).column_name == realTitle.at(j))//todo
+			{
+				primaryData = Data(TableManager.getPrimaryKey(tableName).datatype, stringDatas.at(j));
+			}
 		}
 
 		if (firstPart.size() == 4)//to support title input
@@ -425,7 +428,7 @@ Operation *parser(string t)
 					throw "error column " + stringTitle.at(j) + "not exist";
 			}
 
-			op = new InsertOperation(tableName, titles, datas);
+			op = new InsertOperation(tableName, titles, datas,primaryData);
 			/*cout << "columnname" << endl;
 			for (int i = 0; i < titles.size(); i++)
 			{
@@ -446,7 +449,11 @@ Operation *parser(string t)
 		}*/
 		else
 		{
-			op = new InsertOperation(tableName,datas);//todo
+			if (realTitle.size() == datas.size())
+				op = new InsertOperation(tableName, datas, primaryData);//todo
+			else
+				throw "error number of values";
+
 		}
 		
 	}
