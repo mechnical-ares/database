@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "Operation.h"
 
 class InsertOperation :public Operation

@@ -467,6 +467,7 @@ Operation *parser(string t)
 int main()
 {
 	/*parser("select ab,c,d from e,f where ab>1");*/
+
 	cout << "MIniBase Beta 0.1\n";
 	string input;
 	while (true){

@@ -33,7 +33,53 @@ string Inner2Text(const char s[]){
 string Inner2Text(string &s){
 	return Inner2Text(s.c_str());
 }
+static char Char2Inner(char c1, char c2, int &i){
+	if (c1 == '\\'){
+		i++;
+		switch (c2){
+		case 'n': return '\n';
+		case 't': return '\t';
+		case ',': return ',';
+		case '\\': return '\\';
+		case '0': return '\0';
+		default: return c2;
+		}
+	}
+	else{
+		return c1;
+	}
+}
+static string Text2Inner(const char s[], int len = 0){
+	if (!len) len = strlen(s);
+	string ret = "";
+	for (int i = 0; i < len; i++){
+		ret.push_back(Char2Inner(s[i], s[i + 1], i));
+	}
+	return ret;
+}
+static string Text2Inner(string &s){
+	return Text2Inner(s.c_str());
+}
 
+static string cleanStr(string s){
+	string ret = "";
+	for (size_t i = 0; i < s.length(); i++){
+		switch (s[i]){
+		case '\n': break;
+		case '\t': break;
+		case '\\': break;
+		case '\0': break;
+		case ':': break;
+		case '*': break;
+		case '?': break;
+		case '<': break;
+		case '>': break;
+		case '|': break;
+		default: ret.push_back(s[i]);
+		}
+	}
+	return ret;
+}
 
 
 Table CreateOperation::exec(){

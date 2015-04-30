@@ -16,7 +16,9 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <iostream>
 #include <functional>
+#include <cstdio>
 // TODO: reference additional headers your program requires here
 
 
@@ -30,3 +32,5 @@
 #include "ColumnTitle.h"
 #include "TableColumn.h"
 #include "BPlusTree.h"
+#include "Condition.h"
+#include "ColumnTitle.h"

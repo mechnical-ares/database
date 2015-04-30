@@ -1,6 +1,4 @@
 #pragma once
-#include <string>
-#include <vector>
 #include "Condition.h"
 #include "ColumnTitle.h"
 using namespace std;
@@ -17,4 +15,3 @@ public:
 	ColumnTitle primaryKey;
 	vector<row> data;
 };
-string cleanStr(string s);

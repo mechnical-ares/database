@@ -1,6 +1,4 @@
 #pragma once
-#include "stdafx.h"
-#include <cstdio>
 enum Error{
 	DB_FILE_ERROR = 1,
 	META_FILE_ERROR,
