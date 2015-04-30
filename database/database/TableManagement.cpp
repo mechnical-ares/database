@@ -144,7 +144,7 @@ ColumnTitle TableManagement::getPrimaryKey(string TableName){
 	throw "Table "+ TableName +" Not Found";
 }
 int TableManagement::writeToDisk(){
-	string path = string(".\\Table\\") + cleanStr("TableInfo1");
+	string path = string(".\\Table\\") + cleanStr("TableInfo");
 	ofstream fout(path.c_str());
 	if (!fout){
 		throw "No TableInfo Files Found!\n";
@@ -159,14 +159,14 @@ int TableManagement::writeToDisk(){
 			}
 			if (TableInfomation.at(i).Columns.size() >= 1)
 			{
-				fout << TableInfomation.at(i).Columns.at(TableInfomation.at(i).Columns.size()).column_name << endl;
+				fout << TableInfomation.at(i).Columns.at(TableInfomation.at(i).Columns.size()-1).column_name << endl;
 			}
 			for (size_t j = 0; j < TableInfomation.at(i).Columns.size() - 1; j++){
 				fout << TableInfomation.at(i).Columns.at(j).datatype << ",";
 			}
 			if (TableInfomation.at(i).Columns.size() >= 1)
 			{
-				fout << TableInfomation.at(i).Columns.at(TableInfomation.at(i).Columns.size()).datatype << endl;
+				fout << TableInfomation.at(i).Columns.at(TableInfomation.at(i).Columns.size()-1).datatype << endl;
 			}
 			fout << TableInfomation.at(i).primaryKey.column_name << endl;
 			fout << TableInfomation.at(i).primaryKey.datatype << endl;
