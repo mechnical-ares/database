@@ -118,14 +118,14 @@ TableColumn TransTandC(string t)//×ª»» stringÀïÃæt.cÎª¾ßÌå±íÁÐ£¬selectÊ±Ê¹ÓÃ
 	if (tandc.size() == 2)
 	{
 		if (TableManager.hasColumn(tandc.at(0), tandc.at(1))){
-		temp.tableName = tandc.at(0);
-		temp.colunmName = tandc.at(1);
-		return temp;
-	}
-	else{
+			temp.tableName = tandc.at(0);
+			temp.colunmName = tandc.at(1);
+			return temp;
+		}
+		else{
 			throw  "Column " + tandc.at(1) + "Not Found In Table " + tandc.at(0);
+		}
 	}
-}
 	else{
 		if (TableManager.getTablebyColumn(t).size() == 1)
 		{
@@ -134,12 +134,12 @@ TableColumn TransTandC(string t)//×ª»» stringÀïÃæt.cÎª¾ßÌå±íÁÐ£¬selectÊ±Ê¹ÓÃ
 			return temp;
 		}
 		else if (TableManager.getTablebyColumn(t).size() == 0){
-			throw  "Column " + t + " Not Found" ;
+			throw  "Column " + t + " Not Found";
 
 		}
 		else{
-			throw  "Column " + t + " Found In Many Tables" ;
-			
+			throw  "Column " + t + " Found In Many Tables";
+
 		}
 	}
 }
@@ -175,8 +175,12 @@ ColumnTitle TransCandT(string t)//×ª»» stringÀïÃæa stringÎª¾ßÌå±íµÄÊôÐÔ£¬createÊ
 bool isNotConst(string t){//ÅÐ¶ÏÔËËã·ûÁ½²àµÄ×Ö·û´®ÊÇ³£Á¿·ñ
 	if (t.at(0) == '"'&&t.at(t.size() - 1) == '"')//Èç¹ûÊÇstringÀàÐÍ³£Á¿£¬Ó¦¸ÃÓÉË«ÒýºÅ°ü¹ü£¬Ö±½Ó·µ»Øfalse
 		return false;
-	if (split(t, ".").size() == 1)//Èç¹ûÊÇÆäËûÀàÐÍ³£Á¿£¬ÔòÖÐ¼ä²»»á°üº¬.£¬Òò´Ë¿ÉÒÔÓÃÊÇ·ñ°üº¬µãÀ´ÅÐ¶Ï
-		return false;
+	if (split(t, ".").size() == 1)//Èç¹ûÊÇÖÐ¼ä²»°üº¬.£¬ÔòÒªÅÐ¶ÏÊÇ·ñÊÇÊ¡ÂÔÁË±íÃû£¬
+	{
+		if (!TableManager.hasColumn(t)){
+			return false;
+		}
+	}
 	return true;//Á½¸ö¶¼²»·ûºÏ£¬²»ÊÇ³£Á¿
 }
 Condition Transcond(string t){
@@ -220,27 +224,29 @@ Condition Transcond(string t){
 						}
 	}
 fuzhi:	
-	if ((temp.isRightConst= !isNotConst(cond.at(0))) || (temp.isRightConst = !isNotConst(cond.at(1))))
+	temp.isLeftConst = !isNotConst(cond.at(0));
+	temp.isRightConst = !isNotConst(cond.at(1));
+	if (!(temp.isLeftConst) || !(temp.isRightConst))
 	{
 		if (!temp.isLeftConst&&!temp.isRightConst)
 		{
-		temp.left = TransTandC(cond.at(0));
+			temp.left = TransTandC(cond.at(0));
 			temp.right = TransTandC(cond.at(1));
-	}
-	else{
+		}
+		else{
 			if (temp.isRightConst){
 				temp.left = TransTandC(cond.at(0));
-				rd = Data(TableManager.getDataType(temp.left.tableName,temp.left.colunmName), cond.at(1));
+				rd = Data(TableManager.getDataType(temp.left.tableName, temp.left.colunmName), cond.at(1));
 				temp.isRightConst = TRUE;
 				temp.rightData = rd;
 			}
 			else{
 				temp.right = TransTandC(cond.at(1));
 				ld = Data(TableManager.getDataType(temp.right.tableName, temp.right.colunmName), cond.at(0));
-		temp.isLeftConst = TRUE;
-		temp.leftData = ld;
-	}
-		}	
+				temp.isLeftConst = TRUE;
+				temp.leftData = ld;
+			}
+		}
 	}
 	else{
 		throw  "Condition Not Valid";
@@ -475,11 +481,11 @@ int main()
 		getline(cin, input);
 		try{
 			Operation* operation = parser(input);
-			Table& result = operation->exec();
+			/*Table& result = operation->exec();
 			cout << "success! " << result.data.size() << " rows affected\n";
 			cout << "--------" << result.tableName <<"------------"<< endl;
 
-			result.showTable();
+			result.showTable();*/
 
 			delete operation;
 		}

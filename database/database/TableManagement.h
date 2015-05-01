@@ -16,6 +16,7 @@ public:
 	int TableNum = 0;//记录当前表的总数，用于非重复地初始化临时表的名字
 	int hasTable(string name);
 	int hasColumn(string TableName, string ColumnName);
+	int hasColumn(string ColumnName);
 	vector<TableInfo> getTablebyColumn(string Columnname);
 	vector<string> getColumnbyTable(string TableName);
 	ColumnTitle getPrimaryKey(string TableName);

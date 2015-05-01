@@ -78,6 +78,17 @@ int TableManagement::hasColumn(string TableName, string ColumnName){
 	}
 	return false;
 }
+int TableManagement::hasColumn(string ColumnName){
+	for (size_t i = 0; i < TableInfomation.size(); i++)
+	{
+		for (size_t j = 0; j < TableInfomation.at(i).Columns.size(); j++)
+		{
+			if (TableInfomation.at(i).Columns.at(j).column_name == ColumnName)
+				return true;
+		}
+	}
+	return false;
+}
 int TableManagement::addTable(TableInfo t){
 	if (hasTable(t.Tablename))
 	{
