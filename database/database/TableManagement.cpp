@@ -98,6 +98,7 @@ int TableManagement::addTable(TableInfo t){
 	else{
 		TableInfomation.push_back(t);
 		TableNum++;
+		writeToDisk();
 		return true;
 	}
 }
@@ -158,6 +159,7 @@ int TableManagement::writeToDisk(){
 	string path = string(".\\Table\\") + cleanStr("TableInfo");
 	ofstream fout(path.c_str());
 	if (!fout){
+		fout.close();
 		throw "No TableInfo Files Found!\n";
 		return false;
 	}
@@ -182,6 +184,7 @@ int TableManagement::writeToDisk(){
 			fout << TableInfomation.at(i).primaryKey.column_name << endl;
 			fout << TableInfomation.at(i).primaryKey.datatype << endl;
 		}
+		fout.close();
 		return true;
 	}
 }
@@ -190,6 +193,7 @@ int TableManagement::initialFromDisk(){
 	ifstream fin(path.c_str());
 	if (!fin){
 		string info = "No TableInfo Files Found!\n";
+		fin.close();
 		throw info;
 		return false;
 	}
@@ -228,6 +232,7 @@ int TableManagement::initialFromDisk(){
 			count++;
 		}
 		this->TableNum = count;
+		fin.close();
 		return true;
 	}
 }

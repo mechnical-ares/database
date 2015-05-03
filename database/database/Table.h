@@ -7,7 +7,7 @@ typedef vector<string> row;
 class Table{
 public:
 	Table(){}
-	Table(string tableName);
+//	Table(string tableName);
 	Table(string tableName, const vector<Condition>& conditions);
 	void showTable();
 	string tableName;
