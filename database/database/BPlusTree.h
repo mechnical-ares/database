@@ -146,5 +146,7 @@ public:
 	vector<row> getLessThan(Key& key); // included
 	vector<row> getBiggerThan(Key& key); //included
 	vector<row> getRange(Key& left,Key &right );
+
+	void WriteHead2Disk();
 };
 
