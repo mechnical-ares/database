@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
-char Char2Inner(char c1, char c2, int &i){
+
+static char Char2Inner(char c1, char c2, int &i){
 	if (c1 == '\\'){
 		i++;
 		switch (c2){
@@ -16,7 +17,7 @@ char Char2Inner(char c1, char c2, int &i){
 		return c1;
 	}
 }
-string Text2Inner(const char s[],int len = 0){
+static string Text2Inner(const char s[], int len = 0){
 	if (!len) len = strlen(s);
 	string ret = "";
 	for (int i = 0; i < len; i++){
@@ -24,13 +25,13 @@ string Text2Inner(const char s[],int len = 0){
 	}
 	return ret;
 }
-string Text2Inner(string &s){
+static string Text2Inner(string &s){
 	return Text2Inner(s.c_str());
 }
 
-string cleanStr(string s){
+static string cleanStr(string s){
 	string ret = "";
-	for (int i = 0; i < s.length(); i++){
+	for (size_t i = 0; i < s.length(); i++){
 		switch (s[i]){
 		case '\n': break;
 		case '\t': break;
@@ -47,7 +48,6 @@ string cleanStr(string s){
 	}
 	return ret;
 }
-
 
 //Table::Table(string tableName) :tableName(cleanStr(tableName)){
 //	string path = string(".\\Data\\") + cleanStr(tableName);

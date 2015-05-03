@@ -153,7 +153,7 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, bool 
 	disk.readBlock(page, s);
 	Node node = createNode(s);
 	InteriorNode *p = (InteriorNode*)&node;
-	int i, j, size = (int)s[510], type = (int)s[511], father = char2int(s,505,509,128);
+	int size = (int)s[510], type = (int)s[511], father = char2int(s,505,509,128);
 	
 	vector<Key>::iterator itek = p->keys.begin();
 	vector<Page>::iterator itev = p->pointers.begin();
@@ -249,7 +249,7 @@ InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val)
 	char s[512];
 	disk.readBlock(page, s);
 	Node node = createNode(s);
-	int i,j,size = (int)s[510];
+	int i,size = (int)s[510];
 	LeafNode* p = (LeafNode*)(&node);
 	vector<Key>::iterator itek = p->keys.begin();
 	vector<Value>::iterator itev = p->values.begin();
