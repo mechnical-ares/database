@@ -115,17 +115,17 @@ void BPlusTree::insert_into_tree(Key& newkey, Value& val){
 		int2char(s, 499, 503, NUL, 128);//prev_page
 		int2char(s, 504, 508, 3, 128);//next_page
 		int2char(s, 494, 498, root, 128);//father_page
-		LeafNode leaf(s);
-		leaf.Write2Disk(2, this->disk);
+		LeafNode leaf2(s);
+		leaf2.Write2Disk(2, this->disk);
 		//page 2 complete
 
 		int2char(s, 499, 503, 2, 128);//prev_page
 		int2char(s, 504, 508, NUL, 128);//next_page
 		int2char(s, 494, 498, root, 128);//father_page
-		LeafNode leaf(s);
-		leaf.keys.push_back(newkey);
-		leaf.values.push_back(val);
-		leaf.Write2Disk(3, this->disk);
+		LeafNode leaf3(s);
+		leaf3.keys.push_back(newkey);
+		leaf3.values.push_back(val);
+		leaf3.Write2Disk(3, this->disk);
 		//page 3 complete
 
 		//page 1(root)
@@ -343,7 +343,7 @@ Target BPlusTree::search(Page page, Key& key){
 			return search(p->pointers[p->keys.size()], key);
 		else
 		{
-			for (int i = 0; i<p->keys.size() - 1; i++) if (cmp(key, p->keys[i]) >= 0 && cmp(key, p->keys[i + 1])<0)
+			for (size_t i = 0; i<p->keys.size() - 1; i++) if (cmp(key, p->keys[i]) >= 0 && cmp(key, p->keys[i + 1])<0)
 				return search(p->pointers[i + 1], key);
 		}
 	}
@@ -505,7 +505,7 @@ void BPlusTree::initTree(vector<ColumnTitle> &title, ColumnTitle primaryKey){
 	int2char(s, 505, 509, 0, 128);
 	string2chars(s, 400, 419, primaryKey.column_name);
 	s[420] = (char)primaryKey.datatype;
-	for (int i = 0; i < title.size(); i++){
+	for (size_t i = 0; i < title.size(); i++){
 		string2chars(s, i * 20, i * 20 + 18, title[i].column_name);
 		s[i * 20 + 19] = (char)title[i].datatype;
 	}
@@ -530,9 +530,9 @@ void LeafNode::Write2Disk(Page page, Disk &disk){
 	s[509] = (char)this->values[0].size();
 	int2char(s, 504, 508, this->next_page);
 	int2char(s, 499, 503, this->prev_page);
-	for (int i = 0; i < this->keys.size(); i++){
+	for (size_t i = 0; i < this->keys.size(); i++){
 		string2chars(s, i * 160, i * 160 + 19, this->keys[i]);
-		for (int j = 0; j < this->values[0].size(); j++){
+		for (size_t j = 0; j < this->values[0].size(); j++){
 			string2chars(s, i * 160 + 20 + j * 20, i * 160 + 39 + j * 20,this->values[i][j]);
 		}
 	}
