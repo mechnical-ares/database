@@ -267,13 +267,22 @@ InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val)
 	else{
 		if (cmp(newkey, p->keys[0]) < 0)
 			p->keys.insert(p->keys.begin(), newkey), p->values.insert(p->values.begin(), val);
-		else if (cmp(newkey, p->keys[size - 1]) >= 0)
+		else if (cmp(newkey, p->keys[size - 1]) > 0)
 			p->keys.insert(p->keys.end(), newkey), p->values.insert(p->values.end(), val);
 		else{
+			if (cmp(newkey, p->keys[size - 1]) == 0){
+				cerr << "Two keys conflict!" << endl;
+				throw("Two keys conflict!");
+			}
 			itek++; itev++;
-			for (; itek < p->keys.end(); itek++, itev++)
+			for (; itek < p->keys.end(); itek++, itev++){
+				if (cmp(newkey, *(itek - 1)) == 0){
+					cerr << "Two keys conflict!" << endl;
+					throw("Two keys conflict!");
+				}
 				if (cmp(newkey, *(itek - 1)) >= 0 && cmp(newkey, *itek) < 0)
 					p->keys.insert(itek, newkey), p->values.insert(itev, val);
+			}
 		}
 	}	
 	size++;
@@ -549,6 +558,7 @@ void LeafNode::Write2Disk(Page page, Disk &disk){
 	s[509] = (char)this->numOfAttrs;
 	int2char(s, 504, 508, this->next_page);
 	int2char(s, 499, 503, this->prev_page);
+	int2char(s, 494, 498, this->father);
 	for (size_t i = 0; i < this->keys.size(); i++){
 		string2chars(s, i * 160, i * 160 + 19, this->keys[i]);
 		for (size_t j = 0; j < this->numOfAttrs; j++){
