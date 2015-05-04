@@ -315,16 +315,16 @@ page 0, char[512]:
 BPlusTree::BPlusTree(string name, Table* t) :disk(name){
 	char s[512];
 	disk.readBlock(0, s);
-	cmp = buildKeyfunc((DataType)s[420]);
+	cmp = buildKeyfunc((DataType)s[419]);
 	this->numOfAttrs = s[510];
-	nextApply = char2int(s, 500, 510);
+	nextApply = char2int(s, 505, 509);
 	if (t != NULL){
 		t->tableName = name;
 		t->title.clear();
 		t->data.clear();
 		int i = 0, length = (int)s[510];
 		for (; i<length * 20; i += 20){
-			t->title.push_back(ColumnTitle(char2string(s, i, i + 19), (DataType)char2int(s, i + 19, i + 20)));
+			t->title.push_back(ColumnTitle(char2string(s, i, i + 18), (DataType)char2int(s, i + 19, i + 19)));
 		}
 	}
 	if (nextApply == 0){ // the tree is empty, no data here, init
@@ -522,8 +522,8 @@ void BPlusTree::initTree(vector<ColumnTitle> &title, ColumnTitle primaryKey){
 	s[511] = (int)NUL;
 	s[510] = (char)title.size();
 	int2char(s, 505, 509, 0, 128);
-	string2chars(s, 400, 419, primaryKey.column_name);
-	s[420] = (char)primaryKey.datatype;
+	string2chars(s, 400, 418, primaryKey.column_name);
+	s[419] = primaryKey.datatype;
 	for (size_t i = 0; i < title.size(); i++){
 		string2chars(s, i * 20, i * 20 + 18, title[i].column_name);
 		s[i * 20 + 19] = (char)title[i].datatype;

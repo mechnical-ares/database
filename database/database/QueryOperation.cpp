@@ -110,7 +110,7 @@ Table QueryOperation::exec(){
 		tables.push_back(Table(name,conditions));
 	}
 	Table result = tables[0];
-	for (size_t i = 0; i < tables.size(); i++){
+	for (size_t i = 1; i < tables.size(); i++){
 		result = join(result, tables[i]);
 	}
 	result = filter(result, tables, tableNames, conditions);
