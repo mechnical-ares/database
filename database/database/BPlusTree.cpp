@@ -337,9 +337,9 @@ Target BPlusTree::search(Page page, Key& key){
 	case ROOT:
 	case INTERIOR:
 	{
+		if (type == ROOT && char2int(s, 505, 509, 128) == 0) //tree is empty, return ROOT
+			return make_pair(root, ROOT); 
 		InteriorNode& node = InteriorNode(s);
-		if (node.type == ROOT && char2int(s, 505, 509, 128) == 0) //tree is empty, return ROOT
-			return make_pair(root, ROOT);
 		InteriorNode* p = (InteriorNode*)&node;
 		if (cmp(key, p->keys[0])<0)
 			return search(p->pointers[0], key);
