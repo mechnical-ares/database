@@ -200,15 +200,14 @@ int TableManagement::initialFromDisk(){
 	else{
 		int count = 0;
 		this->TableInfomation.clear();
-		
-		while (!fin){
-			char s[1000];
+		char s[1000];
+		while (fin.getline(s, 1000), !fin.eof()){
 			TableInfo info;
-			fin.getline(s, 1000); // Name
+			 // Name
 			info.Tablename = Text2Inner(&s[0]);
 			fin.getline(s, 1000); //Attributes
 			
-			for (size_t i = 0, len = 0; i <= strlen(s); i++){
+			for (size_t i = 0, len = 0;strlen(s) && i <= strlen(s); i++){
 				if (s[i] == ',' || s[i] == '\n' || s[i] == '\0')
 					info.Columns.push_back(ColumnTitle(Text2Inner(&s[i - len], len))), len = 0;
 				else len++;
