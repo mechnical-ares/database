@@ -30,7 +30,7 @@ struct InsertConsequence
 #define LeafCap LeafNodeCapacity
 #define InCons InsertConsequence
 
-int char2int(char s[], int l, int r, int base = 10);
+int char2int(char s[], int l, int r, int base = 128);
 void int2char(char s[], int l, int r, int value, int base = 128);
 void string2chars(char s[], int l, int r, string &ss);
 string char2string(char s[], int l, int r);

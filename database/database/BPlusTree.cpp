@@ -75,14 +75,14 @@ InteriorNode::~InteriorNode(){}
 LeafNode::~LeafNode(){}
 BPlusTree::~BPlusTree(){}
 InteriorNode::InteriorNode() : Node(INTERIOR){}
-InteriorNode::InteriorNode(char s[], NodeType _type) : Node(_type){
+InteriorNode::InteriorNode(char s[512], NodeType _type) : Node(_type){
 	keys.clear(); pointers.clear();
 	int i = 0, length = (int)s[510];
 	father = char2int(s, 505, 509, 128);
 
 	for (; i<length * 25; i += 25){
-		keys.push_back(char2string(s, i, i + 4));
-		pointers.push_back(char2int(s, i + 5, i + 24));
+		pointers.push_back(char2int(s, i, i + 4));
+		keys.push_back(char2string(s, i + 5, i + 24));
 	}
 	pointers.push_back(char2int(s, i, i + 4));
 }
@@ -116,6 +116,8 @@ void BPlusTree::insert_into_tree(Key& newkey, Value& val){
 		int2char(s, 504, 508, 3, 128);//next_page
 		int2char(s, 494, 498, root, 128);//father_page
 		LeafNode leaf2(s,this->numOfAttrs);
+		leaf2.keys.clear();
+		leaf2.values.clear();
 		leaf2.Write2Disk(2, this->disk);
 		//page 2 complete
 
@@ -123,6 +125,8 @@ void BPlusTree::insert_into_tree(Key& newkey, Value& val){
 		int2char(s, 504, 508, NUL, 128);//next_page
 		int2char(s, 494, 498, root, 128);//father_page
 		LeafNode leaf3(s, this->numOfAttrs);
+		leaf3.keys.clear();
+		leaf3.values.clear();
 		leaf3.keys.push_back(newkey);
 		leaf3.values.push_back(val);
 		leaf3.Write2Disk(3, this->disk);
@@ -135,7 +139,9 @@ void BPlusTree::insert_into_tree(Key& newkey, Value& val){
 		//InteriorNode *p = dynamic_cast<InteriorNode*>(node);
 		InteriorNode& node = InteriorNode(s);
 		InteriorNode *p = (InteriorNode*)&node;
+		p->keys.clear();
 		p->keys.push_back(newkey);
+		p->pointers.clear();
 		p->pointers.push_back(2); p->pointers.push_back(3);
 		p->Write2Disk(root, this->disk);
 
@@ -560,9 +566,9 @@ void InteriorNode::Write2Disk(Page page, Disk &disk){
 	int2char(s, 505, 509, this->father);
 	int i = 0,j=0, length = this->keys.size();
 	for (; i < length * 25; i += 25,j++){
-		string2chars(s, i, i + 4,this->keys[j]);
-		int2char(s, i + 5, i + 24, this->pointers[j]);
+		int2char(s, i, i + 4, this->pointers[j]);
+		string2chars(s, i + 5, i + 24, this->keys[j]);
 	}
-	int2char(s, i + 5, i + 24, this->pointers[j]);
+	int2char(s, i, i + 4, this->pointers[j]);
 	disk.writeBlock(page, s);
 }
