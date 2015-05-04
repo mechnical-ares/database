@@ -426,7 +426,7 @@ Operation *parser(string t)
 				{
 					if (realTitle.at(i) == stringTitle.at(j))
 					{
-				titles.push_back(ColumnTitle(stringTitle.at(j), (DataType)0));
+						titles.push_back(ColumnTitle(stringTitle.at(j), (DataType)0));
 						flag = true;
 					}					
 				}
