@@ -4,7 +4,7 @@ struct TableInfo{
 	string Tablename;
 	ColumnTitle primaryKey;
 	TableInfo(){}
-	TableInfo(vector<ColumnTitle> Columns, string Tablename) :Columns(Columns), Tablename(Tablename){}
+	TableInfo(vector<ColumnTitle> Columns, string Tablename, ColumnTitle primaryKey) :Columns(Columns), Tablename(Tablename),primaryKey(primaryKey){}
 };
 class TableManagement
 {
