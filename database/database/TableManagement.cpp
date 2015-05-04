@@ -201,7 +201,7 @@ int TableManagement::initialFromDisk(){
 		int count = 0;
 		this->TableInfomation.clear();
 		
-		while (!fin.eof()){
+		while (!fin){
 			char s[1000];
 			TableInfo info;
 			fin.getline(s, 1000); // Name

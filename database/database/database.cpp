@@ -481,6 +481,7 @@ int main()
 		getline(cin, input);
 		try{
 			Operation* operation = parser(input);
+			operation->exec();
 			/*Table& result = operation->exec();
 			cout << "success! " << result.data.size() << " rows affected\n";
 			cout << "--------" << result.tableName <<"------------"<< endl;
