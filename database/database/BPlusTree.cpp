@@ -252,8 +252,7 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, bool 
 	}
 }
 
-InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val)
-{
+InCons BPlusTree::insert_into_leaf(Page page, Key& newkey, Value& val){
 	char s[512];
 	disk.readBlock(page, s);
 	LeafNode& node = LeafNode(s,this->numOfAttrs);
