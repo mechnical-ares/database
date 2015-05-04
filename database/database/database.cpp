@@ -374,7 +374,7 @@ Operation *parser(string t)
 			op = new CreateOperation(tableName, CTs, primaryKey);
 
 			//to manage the table list
-			TableInfo newtableinfo(CTs, tableName);
+			TableInfo newtableinfo(CTs, tableName, primaryKey);
 			TableManager.addTable(newtableinfo);
 		}
 	else if (type == "INSERT" || type == "insert")

@@ -68,12 +68,13 @@ class LeafNode : public Node
 {
 public:
 	LeafNode();
-	LeafNode(char s[]);
+	LeafNode(char s[], int numOfAttrs);
 	~LeafNode();
 	vector<Key> keys;
 	vector<Value> values;
 	Page next_page;
 	Page prev_page;
+	int numOfAttrs;
 	void Write2Disk(int page, Disk &disk);
 };
 
@@ -121,7 +122,7 @@ p.after(ki) = p.pointers[i+1]
 */
 
 
-Node createNode(char s[512]);
+//Node* createNode(char s[512]);
 
 
 
@@ -132,6 +133,7 @@ private:
 	Disk disk;
 	Page nextApply;
 	KeyFunc cmp;
+	int numOfAttrs;
 public:
 	BPlusTree(string name, Table* t = NULL);
 	~BPlusTree();
