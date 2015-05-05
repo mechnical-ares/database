@@ -157,6 +157,11 @@ void BPlusTree::insert_into_tree(Key& newkey, Value& val){
 }
 
 InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, bool left){
+	if (page == 0){
+		cerr << "Error ! try to insert into page 0 \n";
+		return InCons();
+		//throw "Error ! try to insert into page 0";
+	}
 	char s[512];
 	disk.readBlock(page, s);
 	InteriorNode& node = InteriorNode(s);
@@ -183,6 +188,7 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, bool 
 		return InCons();
 	}
 	else{
+		if (page == root) type = ROOT;
 		switch (type){
 		case ROOT:
 		{
@@ -203,15 +209,15 @@ InCons BPlusTree::insert_into_interior(Page page, Key& newkey, Page child, bool 
 			}
 			newinter2.pointers.push_back(p->pointers[i]);
 
-			p->keys.resize(half); p->pointers.resize(half + 1);
+			Key left = p->keys[half];
 
 			newinter1.father = root; newinter1.type = INTERIOR;
 			newinter2.father = root; newinter2.type = INTERIOR;
 
-			Key left = p->keys[half];
 
 			p->keys.clear(); p->pointers.clear();
 			p->keys.push_back(left); p->pointers.push_back(newpage1); p->pointers.push_back(newpage2);
+			p->type = ROOT;
 
 			newinter1.Write2Disk(newpage1, disk);
 			newinter2.Write2Disk(newpage2, disk);
@@ -324,7 +330,7 @@ BPlusTree::BPlusTree(string name, Table* t) :disk(name){
 	char s[512];
 	disk.readBlock(0, s);
 	cmp = buildKeyfunc((DataType)s[419]);
-	this->numOfAttrs = s[510];
+	this->numOfAttrs = s[510];//####
 	nextApply = char2int(s, 505, 509);
 	if (t != NULL){
 		t->tableName = name;
@@ -351,7 +357,7 @@ Target BPlusTree::search(Page page, Key& key){
 	case ROOT:
 	case INTERIOR:
 	{
-		if (type == ROOT && char2int(s, 505, 509, 128) == 0) //tree is empty, return ROOT
+		if (type == ROOT && (int)s[510] == 0) //tree is empty, return ROOT
 			return make_pair(root, ROOT); 
 		InteriorNode& node = InteriorNode(s);
 		InteriorNode* p = (InteriorNode*)&node;

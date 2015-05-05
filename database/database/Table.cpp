@@ -132,8 +132,9 @@ void Table::showTable(){
 		cout << setw(8) << title.column_name << "|";
 	}
 	cout << endl;
-
+	int num = 0;
 	for (const auto& row : data){
+		cout << setw(3) << num++ << '\t';
 		for (const auto& data : row){
 			cout << setw(8) << data << "|";
 		}

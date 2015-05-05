@@ -68,7 +68,7 @@ class LeafNode : public Node
 {
 public:
 	LeafNode();
-	LeafNode(char s[], int numOfAttrs);
+	LeafNode(char s[], int numOfAttrs=2);
 	~LeafNode();
 	vector<Key> keys;
 	vector<Value> values;
